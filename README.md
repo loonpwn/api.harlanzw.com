@@ -1,7 +1,7 @@
-Wordpress Boilerplate 
+Harlan's Blog 
 ===================
 
-This is the repo for the Wordpress Boilerplate project. 
+This is the repo for the Harlan's Blog project. 
 
 Setup
 -------------
@@ -17,20 +17,11 @@ Before starting the setup make sure you have:
 - [wp-cli](http://wp-cli.org/#installing) `curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar`
 
 
-#### **Boilerplate Instructions**
-
-First Run a search & replace for the following:
- - Your site url: `local.boilerplate.com` -> local.your-domain
- - Your project title: `Wordpress Boilerplate` -> Your Project Name
- - Your project slug (docker): `project-slug` -> your-project-slug 
- 
-Then delete this section from the readme.
-
 #### **Instructions**
 
 Local Setup
 1. Run our local setup script `./env/docker/setup-local.sh`
-2. Setup your hosts file. `sudo sh -c 'echo "127.0.0.1       local.boilerplate.com" >> /etc/hosts'`
+2. Setup your hosts file. `sudo sh -c 'echo "127.0.0.1       local.harlanzw.com" >> /etc/hosts'`
 
 
 Development 
@@ -40,7 +31,7 @@ Development
 
 This project uses a docker container which will host our site for us and be able to build all of our assets for us. Some useful commands:
 - `docker-compose restart` - Restart the container
-- `docker exec -it project-slug bash` - Attach yourself to the container
+- `docker exec -it harlanzw bash` - Attach yourself to the container
 
 #### **Plugins**
 

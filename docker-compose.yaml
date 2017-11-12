@@ -2,22 +2,22 @@ version: '2'
 
 services:
 
-   project-slug:
+   harlanzw:
     network_mode: "bridge"
-    container_name: project-slug
+    container_name: harlanzw
     # Uncomment the below if you need to rebuild the container
     build: ./env/docker/
     restart: always
 #    image: 4mation/wordpress:v5.3
-    domainname: local.boilerplate.com
+    domainname: local.harlanzw.com
     external_links:
       - proxy
     environment:
-      - VIRTUAL_HOST=local.boilerplate.com
+      - VIRTUAL_HOST=local.harlanzw.com
       # HTTPS does not currently work with the proxy
       - HTTPS_METHOD=noredirect
     extra_hosts:
-      - "local.boilerplate.com:127.0.0.1"
+      - "local.harlanzw.com:127.0.0.1"
 #    This IP is not always correct, it's just what was the host-machine IP at the time
       - "host-machine:172.17.0.1"
 

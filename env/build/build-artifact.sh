@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-APPLICATION_NAME="local.boilerplate.com"
+APPLICATION_NAME="local.harlanzw.com"
 
 GIT_HASH=$(git log --pretty=format:'%H' -n 1)
 FILENAME="$GIT_HASH.zip"

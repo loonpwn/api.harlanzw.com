@@ -16,7 +16,7 @@ chmod -R 777 logs
 
 echo "Building Assets"
 
-docker exec project-slug /home/wp/env/build/deploy.sh
+docker exec harlanzw /home/wp/env/build/deploy.sh
 # Then Build all of our assets
 ./env/build/deploy.sh
 
