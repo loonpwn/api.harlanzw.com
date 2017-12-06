@@ -28,7 +28,7 @@ class FixMyWP {
             }
             wp_deregister_script('jquery');
             wp_deregister_script('jquery-migrate');
-            $min = is_env_dev() ? '' : '.min';
+            $min = is_env_dev() ? '' : 'min.';
             wp_register_script('jquery', '//code.jquery.com/jquery-3.2.1.' . $min . 'js', false, null, true);
             wp_register_script('jquery-migrate', '//code.jquery.com/jquery-migrate-3.0.0.' . $min . 'js', false, null, true);
             wp_enqueue_script('jquery');
@@ -36,7 +36,7 @@ class FixMyWP {
         }, 11);
     }
 
- /**
+    /**
      * WordPress will try and be cool by modifying output, fixing new lines into paragraph tags, etc.
      * This breaks our styling sometimes we so need to disable it. This in particular breaks one of the
      * gravity forms fields by wrapping the span tags in p tags..
