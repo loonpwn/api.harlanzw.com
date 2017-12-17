@@ -2,7 +2,8 @@
 import 'jquery';
 
 // Import everything from autoload
-import "./autoload/**/*"
+import 'bootstrap';
+import 'daemonite-material';
 
 // import local dependencies
 import Router from './util/Router';
