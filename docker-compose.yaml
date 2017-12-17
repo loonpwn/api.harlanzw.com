@@ -10,12 +10,18 @@ services:
     restart: always
 #    image: 4mation/wordpress:v5.3
     domainname: local.harlanzw.com
+    links:
+      - hzw_db
     external_links:
       - proxy
     environment:
+      - DB_NAME=hzw
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_HOST=hzw_db
       - VIRTUAL_HOST=local.harlanzw.com
-      # HTTPS does not currently work with the proxy
       - HTTPS_METHOD=noredirect
+
     extra_hosts:
       - "local.harlanzw.com:127.0.0.1"
 #    This IP is not always correct, it's just what was the host-machine IP at the time
@@ -23,3 +29,16 @@ services:
 
     volumes:
          - .:/home/wp/code
+
+   hzw_db:
+    network_mode: "bridge"
+    container_name: hzw_db
+    image: mariadb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=hzw
+    ports:
+      - "3311:3306"
+    volumes:
+      - ./env/database:/var/lib/mysql
