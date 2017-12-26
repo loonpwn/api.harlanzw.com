@@ -1,0 +1,14 @@
+.section {
+  position: relative;
+  margin: 3em 0;
+  &--padded {
+    margin: 3em 0;
+  }
+  @include sm-max() {
+    margin: 1.5em 0;
+  }
+  @include xs-max() {
+    margin: 1em 0;
+  }
+}
+

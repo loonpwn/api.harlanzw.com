@@ -1,0 +1,16 @@
+body.single-post {
+
+  // make WYSIWYG's easier to read
+  .widget-wysiwyg .container {
+    width: 50%;
+    font-size: 1.1rem;
+    line-height: 1.6rem;
+    p {
+      margin-bottom: 1.5rem;
+    }
+    @include sm-max {
+      width: 100%;
+    }
+  }
+
+}
