@@ -1,0 +1,15 @@
+.call-to-action {
+  display: flex;
+  min-height: 50vh;
+
+  &__container {
+    align-self: center;
+    display: inline-flex;
+    max-width: 320px;
+  }
+  &__subtitle {
+    margin-left: 1rem;
+    align-self: center;
+    display: flex;
+  }
+}
