@@ -2,19 +2,16 @@
 //@import "~bootstrap/scss/bootstrap";
 @import "common/variables";
 @import "~daemonite-material/assets/sass/material";
-/**
- * Import npm dependencies
- *
- * Prefix your imports with `~` to grab from node_modules/
- * @see https://github.com/webpack-contrib/sass-loader#imports
- */
-// @import "~some-node-module";
+
+@import "mixin/media-query";
+
 /** Import theme styles */
 @import "common/global";
 @import "components/buttons";
 @import "components/comments";
 @import "components/forms";
 @import "components/wp-classes";
+@import "components/headroom";
 @import "layouts/header";
 @import "layouts/sidebar";
 @import "layouts/footer";

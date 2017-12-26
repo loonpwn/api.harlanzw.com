@@ -18,12 +18,8 @@ add_filter('acf-widgets/register', function () {
         'wysiwyg',
         'call-to-action',
         'content-columns',
-        'gallery-list',
-        'instagram',
         'posts',
         'full-width-image',
-        'contact-form-7',
-        'slider',
         'clients',
         'two-columns'
     ];

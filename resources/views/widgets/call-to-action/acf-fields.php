@@ -1,7 +1,7 @@
 <?php
 return [
     [
-        'key' => 'field_58e1bf55fb250',
+        'key' => 'field_5a41bb9c19d12',
         'label' => 'Background Image',
         'name' => 'background_image',
         'type' => 'image',

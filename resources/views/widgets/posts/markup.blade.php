@@ -17,14 +17,13 @@ global $post;
         <h2>{{ $title }}
             <small> // <a href="/blog/">View All</a></small>
         </h2>
-        <div class="row">
+        <div class="card-group">
             @foreach($posts as $post)
                 <?php
                 setup_postdata($post);
                 ?>
-                <div class="col-lg-{{ $columns }} col-md-6">
-                    @include('partials.content')
-                </div>
+
+                @include('partials.content')
             @endforeach
         </div>
     </div>

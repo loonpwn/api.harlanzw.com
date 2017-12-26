@@ -3,21 +3,28 @@ import 'jquery';
 // Import everything from autoload
 import 'bootstrap';
 import 'daemonite-material';
+// make header nicer
+import 'headroom.js';
+import 'headroom.js/dist/jQuery.headroom.js';
+// lazy loading
+import 'lazysizes/plugins/unveilhooks/ls.unveilhooks';
+import 'lazysizes/plugins/object-fit/ls.object-fit';
+import 'lazysizes/plugins/bgset/ls.bgset';
+import 'lazysizes/plugins/respimg/ls.respimg'
+
 // import local dependencies
-import Router from './util/Router';
-import common from './routes/common';
-import home from './routes/home';
-import aboutUs from './routes/about';
+import Components from './util/components';
+import common from './components/common';
 
-/** Populate Router instance with DOM routes */
-const routes = new Router({
-    // All pages
+const components = new Components([
     common,
-    // Home page
-    home,
-    // About Us page, note the change from about-us to aboutUs.
-    aboutUs,
-});
+]);
 
-// Load Events
-jQuery(document).ready(() => routes.loadEvents());
+
+components.fire('init', $);
+/** Load Events */
+jQuery(document).ready(($) => {
+    components.fire('ready', $);
+});
+jQuery(window).on('load', ($) => components.fire('loaded', $));
+

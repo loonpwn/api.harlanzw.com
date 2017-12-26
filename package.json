@@ -128,7 +128,9 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "daemonite-material": "^4.0.0-beta",
+    "headroom.js": "^0.9.4",
     "jquery": "1.12.4 - 3",
+    "lazysizes": "^4.0.1",
     "popper.js": "^1.11.0"
   }
 }

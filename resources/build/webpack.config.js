@@ -172,6 +172,7 @@ let webpackConfig = {
             jQuery: 'jquery',
             'window.jQuery': 'jquery',
             Popper: 'popper.js',
+            Headroom: 'headroom.js',
         }),
         new webpack.LoaderOptionsPlugin({
             minimize: config.enabled.optimize,

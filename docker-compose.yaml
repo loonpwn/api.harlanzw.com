@@ -29,6 +29,7 @@ services:
 
     volumes:
          - .:/home/wp/code
+         - /home/harlan/.ssh:/home/wp/.ssh
 
    hzw_db:
     network_mode: "bridge"

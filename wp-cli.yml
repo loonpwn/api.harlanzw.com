@@ -13,7 +13,7 @@ path: web/wp
 #  url: https://local.harlanzw.com
 #  path: /var/app/current/web/wp
 
-#@live:
-#  ssh: ec2-user@prod.tmp.4mation.com.au/var/app/current
-#  url: https://local.harlanzw.com
-#  path: /var/app/current/web/wp
+@live:
+  ssh: harlanzw@harlanzw.com:2222/home/harlanzw/code
+  url: https://harlanzw.com
+  path: /home/harlanzw/code/web/wp
