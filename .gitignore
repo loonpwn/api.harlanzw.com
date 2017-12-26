@@ -11,10 +11,10 @@ web/app/db.php
 /web/app/wflogs/*
 
 # Keep all 4m plugins
-!web/app/plugins/*-4m/
-!web/app/mu-plugins/*-4m/
+!web/app/plugins/*-hzw/
+!web/app/mu-plugins/*-hzw/
 
-web/app/mu-plugins/acf-widgets-4m/
+web/app/mu-plugins/acf-widgets-hzw/
 
 # WordPress
 web/wp

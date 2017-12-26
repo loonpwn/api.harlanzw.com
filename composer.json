@@ -40,18 +40,6 @@
         }
       }
     },
-    {
-      "type": "package",
-      "package": {
-        "name": "4m-mirror/acf-widgets",
-        "version": "1.0.5",
-        "type": "wordpress-muplugin",
-        "dist": {
-          "type": "zip",
-          "url": "https://github.com/loonpwn/WP-ACF-Widgets/releases/download/v1.0.5/wp-acf-widgets-v1.0.5.zip"
-        }
-      }
-    }
   ],
   "require": {
     "php": ">=7",
@@ -60,7 +48,6 @@
     "johnpbloch/wordpress": "^4.9.1",
     "oscarotero/env": "^1.1.0",
     "roots/wp-password-bcrypt": "^1.0.0",
-    "4m-mirror/acf-widgets": "1.0.5",
 
     "illuminate/view": "^5.5.2",
     "illuminate/config": "^5.5.2",
