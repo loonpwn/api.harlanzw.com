@@ -80,6 +80,8 @@ define('MAILGUN_USEAPI', env('MAILGUN_USEAPI'));
 define('MAILGUN_APIKEY', env('MAILGUN_APIKEY'));
 define('MAILGUN_DOMAIN', env('MAILGUN_DOMAIN'));
 
+define('WP_DEFAULT_THEME', 'harlanzw.com');
+
 /**
  * Custom Settings
  */
