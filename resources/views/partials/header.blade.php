@@ -1,4 +1,4 @@
-<header data-headroom>
+<header data-headroom data-headroom data-offset="90">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" >
         <div class="container">
             <a class="navbar-brand" href="/">HarlanZW</a>
