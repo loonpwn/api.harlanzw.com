@@ -8,20 +8,21 @@
 
         <p>Instantly improve your ranking within WordPress plugin archive.</p>
 
-        <form method="post">
-            <h2>Find your current search score</h2>
-            <label>
-                Plugin URL
-                <input name="plugin-url" required>
-            </label>
-            <label>
-                Search term
-                <input name="search-term" required>
-            </label>
-            <input name="action" value="plugin-search" type="hidden">
-            <button type="submit">Find score</button>
-        </form>
-    </div>
+        <div class="form-group">
+            <label for="plugin-url">Plugin Slug</label>
+            <input type="text" class="form-control" name="plugin-url" id="plugin-url" aria-describedby="plugin-url-help" placeholder="Enter Slug">
+            <small id="plugin-url-help" class="form-text text-muted">This is the end of the URL for your plugin. Example https://wordpress.org/plugins/<strong>wordpress-seo</strong>/</small>
+        </div>
+        <div class="form-group">
+            <label for="search-term">Search Term</label>
+            <input type="password" class="form-control" id="search-term" aria-describedby="search-term-help" placeholder="Enter Search Term">
+            <small id="search-term-help" class="form-text text-muted">What users are searching that should show your plugin.</small>
+        </div>
+        <input name="action" value="plugin-search" type="hidden">
 
+
+        <button type="submit" class="btn btn-primary">Find score</button>
+
+    </div>
 
 @endsection
