@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    @while(have_posts()) @php(the_post())
-    @include('partials.content-single-'.get_post_type())
-    @endwhile
+    {{-- Pages have no explicit content as it all comes from widgets --}}
+    @php
+        do_action('acf-widget/render');
+    @endphp
 @endsection
