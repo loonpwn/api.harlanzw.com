@@ -6,6 +6,10 @@
   @extend .nav-link;
 }
 
+.menu-item {
+  padding: 0.5em 1em;
+}
+
 .logo {
   height: 40px;
   width: auto;

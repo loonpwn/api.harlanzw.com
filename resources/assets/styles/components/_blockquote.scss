@@ -10,6 +10,9 @@ blockquote {
   position: relative;
   line-height: 1.3em;
   text-align: justify;
+  p {
+    margin: 0 !important;
+  }
 }
 
 blockquote:before {
