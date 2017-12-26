@@ -3,7 +3,7 @@
 use Illuminate\Support\Str;
 use TextAnalysis\NGrams\NGramFactory;
 
-if (isset($_POST['action']) && $_POST['action'] !== 'plugin-search') {
+if (empty($_POST['action']) || $_POST['action'] !== 'plugin-search') {
     return;
 }
 
