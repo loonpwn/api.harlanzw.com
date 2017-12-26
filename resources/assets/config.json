@@ -1,0 +1,21 @@
+{
+  "entry": {
+    "main": [
+      "./styles/main.scss",
+      "./scripts/main.js"
+    ]
+  },
+  "distPath": "/web/app/themes/harlanzw.com/dist",
+  "publicPath": "/app/themes/harlanzw.com",
+  "devUrl": "http://local.harlanzw.com",
+  "proxyUrl": "http://localhost:3000",
+  "cacheBusting": "[name]_[hash:8]",
+  "watch": [
+    "app/**/*.php",
+    "config/**/*.php",
+    "resources/controllers/**/*.php",
+    "resources/views/**/*.php",
+    "resources/assets/styles/*.scss",
+    "resources/assets/styles/**/*.scss"
+  ]
+}

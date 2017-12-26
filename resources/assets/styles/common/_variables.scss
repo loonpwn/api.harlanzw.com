@@ -1,0 +1,44 @@
+@import "~daemonite-material/assets/sass/colours";
+
+$theme-colors: (
+        primary: (
+                color: $material-color-amber-500,
+                darker: $material-color-amber-700,
+                lighter: $material-color-amber-100
+        ),
+        secondary: (
+                color: $material-color-teal-a200,
+                darker: $material-color-teal-a400,
+                lighter: $material-color-teal-a100
+        ),
+        danger: (
+                color: $material-color-red-500,
+                darker: $material-color-red-700,
+                lighter: $material-color-red-100
+        ),
+        info: (
+                color: $material-color-blue-500,
+                darker: $material-color-blue-700,
+                lighter: $material-color-blue-100
+        ),
+        success: (
+                color: $material-color-green-500,
+                darker: $material-color-green-700,
+                lighter: $material-color-green-100
+        ),
+        warning: (
+                color: $material-color-orange-500,
+                darker: $material-color-orange-700,
+                lighter: $material-color-orange-100
+        ),
+        dark: (
+                color: $material-color-grey-800,
+                darker: $material-color-grey-900,
+                lighter: $material-color-grey-600
+        ),
+        light: (
+                color: $material-color-grey-100,
+                darker: $material-color-grey-300,
+                lighter: $material-color-grey-050
+        )
+);

@@ -93,7 +93,8 @@ RUN cat /home/wp/.nvmbashrc >> /home/wp/.bashrc
 
 RUN mkdir /home/wp/code; \
     mkdir /home/wp/code/web; \
-    mkdir /home/wp/code/logs; \
+    mkdir /home/wp/code/runtime; \
+    mkdir /home/wp/code/runtime/apache; \
     mkdir /home/wp/.ssh
 
 # Setup our web root

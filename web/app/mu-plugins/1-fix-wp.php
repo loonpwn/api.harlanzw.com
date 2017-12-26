@@ -36,21 +36,6 @@ class FixMyWP {
         }, 11);
     }
 
-    /**
-     * WordPress will try and be cool by modifying output, fixing new lines into paragraph tags, etc.
-     * This breaks our styling sometimes we so need to disable it. This in particular breaks one of the
-     * gravity forms fields by wrapping the span tags in p tags..
-     */
-    public static function fix_gravityforms_output() {
-        add_filter('pre_do_shortcode_tag', function($unused, $tag) {
-            if ($tag != 'gravityform') {
-                return false;
-            }
-            remove_filter( 'the_content', 'wptexturize');
-            remove_filter( 'the_content', 'wpautop');
-            return false;
-        }, 10, 2);
-    }
 
 // Call Googles HTML5 Shim, but only for users on old versions of IE
     public static  function IEhtml5_shim () {
@@ -91,6 +76,17 @@ class FixMyWP {
 
         remove_action('wp_head', 'index_rel_link');
         remove_action( 'wp_head', 'feed_links_extra' );
+
+        // Remove the REST API endpoint.
+        remove_action( 'rest_api_init', 'wp_oembed_register_route' );
+        // Turn off oEmbed auto discovery.
+        add_filter( 'embed_oembed_discover', '__return_false' );
+        // Don't filter oEmbed results.
+        remove_filter( 'oembed_dataparse', 'wp_filter_oembed_result', 10 );
+        // Remove oEmbed discovery links.
+        remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+        // Remove oEmbed-specific JavaScript from the front-end and back-end.
+        remove_action( 'wp_head', 'wp_oembed_add_host_js' );
     }
 
     public static  function force_footer_scripts() {
@@ -138,4 +134,3 @@ FixMyWP::clean_head();
 FixMyWP::force_footer_scripts();
 FixMyWP::force_oembed_width();
 FixMyWP::remove_wp_version();
-//FixMyWP::fix_gravityforms_output();

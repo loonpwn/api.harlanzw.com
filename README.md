@@ -1,7 +1,7 @@
-Harlan's Blog 
+harlanzw.com
 ===================
 
-This is the repo for the Harlan's Blog project. 
+This is the repo for the HarlanZW blog website. 
 
 Setup
 -------------
@@ -21,7 +21,7 @@ Before starting the setup make sure you have:
 
 Local Setup
 1. Run our local setup script `./env/docker/setup-local.sh`
-2. Setup your hosts file. `sudo sh -c 'echo "127.0.0.1       local.harlanzw.com" >> /etc/hosts'`
+2. Setup your hosts file. `sudo sh -c 'echo "127.0.0.1       local.mcgrathfoundation.com.au" >> /etc/hosts'`
 
 
 Development 
@@ -31,7 +31,7 @@ Development
 
 This project uses a docker container which will host our site for us and be able to build all of our assets for us. Some useful commands:
 - `docker-compose restart` - Restart the container
-- `docker exec -it harlanzw bash` - Attach yourself to the container
+- `docker exec -it mcgrath bash` - Attach yourself to the container
 
 #### **Plugins**
 

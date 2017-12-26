@@ -1,0 +1,1 @@
+{!! do_shortcode('[rev_slider alias="' . $slider_alias . '"]') !!}

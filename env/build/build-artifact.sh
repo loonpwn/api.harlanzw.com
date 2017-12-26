@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-APPLICATION_NAME="local.harlanzw.com"
+APPLICATION_NAME="local.mcgrathfoundation.com.au"
 
 GIT_HASH=$(git log --pretty=format:'%H' -n 1)
 FILENAME="$GIT_HASH.zip"
 MESSAGE=$(git log -1 --pretty=%B)
+# Only get the first 200 characters of the commit message - otherwise eb dies
+MESSAGE=${MESSAGE:0:199}
 
 zip "$FILENAME" -x *.git* -r * .[^.]*
 

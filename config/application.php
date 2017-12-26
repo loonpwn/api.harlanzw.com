@@ -2,6 +2,7 @@
 
 /** @var string Directory containing all of the site's files */
 $root_dir = dirname(__DIR__);
+define('ROOT_DIR', $root_dir);
 
 /** @var string Document Root */
 $webroot_dir = $root_dir . '/web';
@@ -24,7 +25,11 @@ if (file_exists($root_dir . '/.env')) {
  * Set up our global environment constant and load its config first
  * Default: production
  */
-define('WP_ENV', env('WP_ENV') ?: 'production');
+if (!empty($_COOKIE) && isset($_COOKIE['X-IS-SELENIUM'])) {
+	define('WP_ENV', 'behat');
+} else {
+	define('WP_ENV', env('WP_ENV') ?: 'production');
+}
 
 $env_config = __DIR__ . '/environments/' . WP_ENV . '.php';
 

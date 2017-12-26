@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-
 set -e
 
 # Import our environment variables
 source ".env" #import constants
 
-THEMES_FOLDER="./web/app/themes/"
+THEMES_FOLDER="./"
 # Includes helper functions
 . "env/build/functions.sh"
 
