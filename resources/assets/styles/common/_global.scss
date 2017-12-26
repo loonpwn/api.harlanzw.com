@@ -1,0 +1,33 @@
+// Custom Scrollbars
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(57,57,57, .1);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: rgba(156, 156, 156, .6);
+}
+
+body {
+  background-color: #f5f5f5;
+  min-width: 300px;
+  overflow-x: hidden;
+}
+
+img {
+  pointer-events: none;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+#content {
+  background-color: white;
+}
