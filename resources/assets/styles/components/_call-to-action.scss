@@ -1,11 +1,13 @@
 .call-to-action {
   display: flex;
   min-height: 50vh;
+  background-position: 50% 50%;
 
   &__container {
     align-self: center;
     display: inline-flex;
     max-width: 320px;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
   }
   &__subtitle {
     margin-left: 1rem;

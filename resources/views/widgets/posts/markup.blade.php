@@ -22,8 +22,9 @@ global $post;
                 <?php
                 setup_postdata($post);
                 ?>
-
-                @include('partials.content')
+                <div class="col-lg-{{ $columns }} col-md-6">
+                    @include('partials.content')
+                </div>
             @endforeach
         </div>
     </div>
