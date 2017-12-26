@@ -7,7 +7,6 @@
 use Roots\Sage\Config;
 use Roots\Sage\Container;
 
-
 /**
  * Sage required files
  *
