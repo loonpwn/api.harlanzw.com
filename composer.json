@@ -51,6 +51,10 @@
 
     "illuminate/view": "^5.5.2",
     "illuminate/config": "^5.5.2",
+    "wpackagist-plugin/acf-content-analysis-for-yoast-seo": "2.0.1",
+    "wpackagist-plugin/imsanity": "^2.3.9",
+    "wpackagist-plugin/ewww-image-optimizer": "4.0.4",
+    "wpackagist-plugin/safe-svg": "^1.5.0",
 
     "advanced-custom-fields/advanced-custom-fields-pro": "^5.6.6",
     "wpackagist-plugin/w3-total-cache": "^0.9.5.4",
