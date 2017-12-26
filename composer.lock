@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bf1148cbd843d3c5334e830b0e9ffa8",
+    "content-hash": "9c430f6b49a5c7e25caaf82990536ceb",
     "packages": [
         {
             "name": "4m-mirror/acf-widgets",
@@ -31,6 +31,53 @@
                 "philippbaschke/acf-pro-installer": "^1.0"
             },
             "type": "wordpress-muplugin"
+        },
+        {
+            "name": "brainmaestro/composer-git-hooks",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BrainMaestro/composer-git-hooks.git",
+                "reference": "cb8f4c70238cd06e20e2a5dc83cf721bc6f525c4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BrainMaestro/composer-git-hooks/zipball/cb8f4c70238cd06e20e2a5dc83cf721bc6f525c4",
+                "reference": "cb8f4c70238cd06e20e2a5dc83cf721bc6f525c4",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/console": "^3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "bin": [
+                "cghooks"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BrainMaestro\\GitHooks\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ezinwa Okpoechi",
+                    "email": "brainmaestro@outlook.com"
+                }
+            ],
+            "description": "Easily manage git hooks in your composer config",
+            "keywords": [
+                "HOOK",
+                "composer",
+                "git"
+            ],
+            "time": "2017-10-20T16:03:09+00:00"
         },
         {
             "name": "composer/installers",
@@ -1029,6 +1076,74 @@
             "time": "2016-03-01T16:27:06+00:00"
         },
         {
+            "name": "symfony/console",
+            "version": "v3.3.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/console.git",
+                "reference": "55497618e68845b6f92a66d13187138ac3d7750e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/console/zipball/55497618e68845b6f92a66d13187138ac3d7750e",
+                "reference": "55497618e68845b6f92a66d13187138ac3d7750e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8",
+                "symfony/debug": "~2.8|~3.0",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<3.3"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "~3.3",
+                "symfony/dependency-injection": "~3.3",
+                "symfony/event-dispatcher": "~2.8|~3.0",
+                "symfony/filesystem": "~2.8|~3.0",
+                "symfony/process": "~2.8|~3.0"
+            },
+            "suggest": {
+                "psr/log": "For using the console logger",
+                "symfony/event-dispatcher": "",
+                "symfony/filesystem": "",
+                "symfony/process": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Console\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-11-29T12:25:49+00:00"
+        },
+        {
             "name": "symfony/debug",
             "version": "v3.4.2",
             "source": {
@@ -1933,53 +2048,6 @@
                 "transliterator"
             ],
             "time": "2017-04-04T11:38:05+00:00"
-        },
-        {
-            "name": "brainmaestro/composer-git-hooks",
-            "version": "v2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/BrainMaestro/composer-git-hooks.git",
-                "reference": "cb8f4c70238cd06e20e2a5dc83cf721bc6f525c4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/BrainMaestro/composer-git-hooks/zipball/cb8f4c70238cd06e20e2a5dc83cf721bc6f525c4",
-                "reference": "cb8f4c70238cd06e20e2a5dc83cf721bc6f525c4",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/console": "^3.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7"
-            },
-            "bin": [
-                "cghooks"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "BrainMaestro\\GitHooks\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ezinwa Okpoechi",
-                    "email": "brainmaestro@outlook.com"
-                }
-            ],
-            "description": "Easily manage git hooks in your composer config",
-            "keywords": [
-                "HOOK",
-                "composer",
-                "git"
-            ],
-            "time": "2017-10-20T16:03:09+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -2958,74 +3026,6 @@
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
             "time": "2017-12-14T19:40:10+00:00"
-        },
-        {
-            "name": "symfony/console",
-            "version": "v3.3.14",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/console.git",
-                "reference": "55497618e68845b6f92a66d13187138ac3d7750e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/55497618e68845b6f92a66d13187138ac3d7750e",
-                "reference": "55497618e68845b6f92a66d13187138ac3d7750e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9|>=7.0.8",
-                "symfony/debug": "~2.8|~3.0",
-                "symfony/polyfill-mbstring": "~1.0"
-            },
-            "conflict": {
-                "symfony/dependency-injection": "<3.3"
-            },
-            "require-dev": {
-                "psr/log": "~1.0",
-                "symfony/config": "~3.3",
-                "symfony/dependency-injection": "~3.3",
-                "symfony/event-dispatcher": "~2.8|~3.0",
-                "symfony/filesystem": "~2.8|~3.0",
-                "symfony/process": "~2.8|~3.0"
-            },
-            "suggest": {
-                "psr/log": "For using the console logger",
-                "symfony/event-dispatcher": "",
-                "symfony/filesystem": "",
-                "symfony/process": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Console\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Console Component",
-            "homepage": "https://symfony.com",
-            "time": "2017-11-29T12:25:49+00:00"
         },
         {
             "name": "symfony/css-selector",
