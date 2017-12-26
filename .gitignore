@@ -14,8 +14,6 @@ web/app/db.php
 !web/app/plugins/*-hzw/
 !web/app/mu-plugins/*-hzw/
 
-web/app/mu-plugins/acf-widgets-hzw/
-
 # WordPress
 web/wp
 
