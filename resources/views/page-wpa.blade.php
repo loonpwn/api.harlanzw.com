@@ -12,7 +12,7 @@
         global $wpa_output;
         ?>
         @if(empty($wpa_output))
-            <form method="post">
+            <form method="get">
 
                 <div class="form-group">
                     <label class="form-control-label" for="plugin-url">Plugin Slug</label>

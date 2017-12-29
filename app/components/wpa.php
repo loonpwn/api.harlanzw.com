@@ -3,12 +3,12 @@
 use Illuminate\Support\Str;
 use TextAnalysis\NGrams\NGramFactory;
 
-if (empty($_POST['action']) || $_POST['action'] !== 'plugin-search') {
+if (empty($_GET['action']) || $_GET['action'] !== 'plugin-search') {
     return;
 }
 
-$plugin = $_POST['plugin-url'];
-$search_term = strtolower($_POST['search-term']);
+$plugin = $_GET['plugin-url'];
+$search_term = strtolower($_GET['search-term']);
 
 
 require ABSPATH . '/wp-admin/includes/plugin-install.php';
