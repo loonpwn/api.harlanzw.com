@@ -29,7 +29,7 @@
 
                 <button type="submit" class="btn btn-primary">Find score</button>
             </form>
-        @else
+        @elseif(!isset($wpa_output['error']))
             <p>Looking at the search score for <strong>{{  $_POST['plugin-url'] }}</strong> with search term <strong>{{  $_POST['search-term'] }}</strong>.</p>
 
             <h3>Current Score</h3>
@@ -51,6 +51,11 @@
             <code>
                 {!! $wpa_output['log'] !!}
             </code>
+        @else
+            <div class="alert alert-danger">
+                <p>Invalid plugin slug provided.</p>
+            </div>
+            <a href="/wpa/" class="btn btn-link">Search Again</a>
         @endif
 
     </div>

@@ -13,6 +13,8 @@ $search_term = strtolower($_GET['search-term']);
 
 require ABSPATH . '/wp-admin/includes/plugin-install.php';
 
+global $wpa_output;
+
 $log = '';
 $recommendations = [];
 
@@ -27,6 +29,13 @@ $call_api = plugins_api('plugin_information', array('slug' => $plugin, 'fields' 
     'group' => true,
     'contributors' => true,
 ]));
+
+if ($call_api instanceof WP_Error) {
+    $wpa_output = [
+        'error' => 'Invalid Plugin Provided!',
+    ];
+    return;
+}
 
 $installs = json_decode(file_get_contents('https://api.wordpress.org/stats/plugin/1.0/downloads.php?slug=' . $plugin . '&historical_summary=13'))->all_time;
 
@@ -245,7 +254,6 @@ if ($resolved_percentage !== 1) {
 
 $log .= '<strong>Final Score is: ' . (int)$total_points . '. Can achieve a total score of: ' . (int)$max_points . '</strong>';
 
-global $wpa_output;
 
 $wpa_output = [
     'log' => $log,
