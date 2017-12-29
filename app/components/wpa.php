@@ -13,7 +13,10 @@ $search_term = strtolower($_POST['search-term']);
 
 require ABSPATH . '/wp-admin/includes/plugin-install.php';
 
-echo 'Getting score for plugin ' . $plugin . ' with search term: "' . $search_term . '"<br>';
+$log = '';
+$recommendations = [];
+
+$log .= 'Getting score for plugin ' . $plugin . ' with search term: "' . $search_term . '"<br>';
 /** Prepare our query */
 $call_api = plugins_api('plugin_information', array('slug' => $plugin, 'fields' => [
     'description' => true,
@@ -28,11 +31,9 @@ $call_api = plugins_api('plugin_information', array('slug' => $plugin, 'fields' 
 $installs = json_decode(file_get_contents('https://api.wordpress.org/stats/plugin/1.0/downloads.php?slug=' . $plugin . '&historical_summary=13'))->all_time;
 
 // get the readme.txt file
-$readme = file_get_contents('https://plugins.svn.wordpress.org/' . $plugin . '/trunk/readme.txt');
-$re = '/(.*?)\n.*\n== Description/';
-preg_match_all($re, $readme, $matches, PREG_SET_ORDER);
+$readme = new \App\Helpers\ReadmeParser('https://plugins.svn.wordpress.org/' . $plugin . '/trunk/readme.txt');
 
-$call_api->excerpt = $matches[0][1];
+$call_api->excerpt = $readme->short_description;
 // Print the entire match result
 $call_api->description = $call_api->sections['description'];
 
@@ -107,10 +108,11 @@ Runs a match_phrase_prefix query on each field and combines the _score from each
  */
 
 if (Str::contains(strtolower($call_api->all_content), $search_term)) {
-    echo 'Required Search Term is in content - 0.1 point for having the search term in content <br>';
+    $log .= 'Required Search Term is in content - 0.1 point for having the search term in content <br>';
     $total_points += 0.1;
 } else {
-    echo 'Search term was NOT in content - Score is 0 <br>';
+    $log .= 'Search term was NOT in content - Score is 0 <br>';
+    $recommendations[] = 'Add ' . $search_term . ' to the readme';
 }
 
 
@@ -118,9 +120,10 @@ if (Str::contains(strtolower($call_api->all_content), $search_term)) {
 foreach ($boost_phrase_fields as $field) {
     if (Str::contains(strtolower($call_api->$field), $search_term)) {
         $total_points += 2;
-        echo 'Term is within field: ' . $field . ' - 2 Point boost!<br>';
+        $log .= 'Term is within field: ' . $field . ' - 2 Point boost!<br>';
     } else {
-        echo 'Term is not within field: ' . $field . ' - 0 Point boost<br>';
+        $log .= 'Term is not within field: ' . $field . ' - 0 Point boost<br>';
+        $recommendations[] = 'Add ' . $search_term . ' to ' . $field . '. Currently: ' . $call_api->$field;
     }
 }
 
@@ -129,9 +132,9 @@ foreach ($boost_ngram_fields as $field) {
     foreach ($call_api->$field as $token) {
         if (Str::contains($token, $search_term)) {
             $total_points += 0.2;
-            echo 'Term is within ngram title : ' . $token . ' - 0.2 Point boost!<br>';
+            $log .= 'Term is within ngram title : ' . $token . ' - 0.2 Point boost!<br>';
         } else {
-            echo 'Term is not within ngram title : ' . $token . ' - 0 Point boost<br>';
+            $log .= 'Term is not within ngram title : ' . $token . ' - 0 Point boost<br>';
         }
     }
 }
@@ -146,9 +149,10 @@ foreach ($boost_title_fields as $field) {
 }
 if ($allocate) {
     $total_points += 2;
-    echo 'Term is title or slug - 2 Point boost!<br>';
+    $log .= 'Term is title or slug - 2 Point boost!<br>';
 } else {
-    echo 'Term is not in title or slug - 0 Point boost<br>';
+    $recommendations[] = 'Add ' . $search_term . ' to title or slug of plugin';
+    $log .= 'Term is not in title or slug - 0 Point boost<br>';
 }
 
 // boost content fields
@@ -161,9 +165,10 @@ foreach ($boost_content_fields as $field) {
 }
 if ($allocate) {
     $total_points += 2;
-    echo 'Term is within content - 2 Point boost!<br>';
+    $log .= 'Term is within content - 2 Point boost!<br>';
 } else {
-    echo 'Term is not within content - 0 Point boost<br>';
+    $recommendations[] = 'Add ' . $search_term . ' to excerpt, description or plugin tags';
+    $log .= 'Term is not within content - 0 Point boost<br>';
 }
 
 // boost content fields
@@ -176,21 +181,22 @@ foreach (['author', 'contributors'] as $field) {
 }
 if ($allocate) {
     $total_points += 2;
-    echo 'Term is within author or contributors - 2 Point boost!<br>';
+    $log .= 'Term is within author or contributors - 2 Point boost!<br>';
 } else {
-    echo 'Term is not within author or contributors - 0 Point boost<br>';
+    $recommendations[] = 'Add ' . $search_term . ' to author or contributors name. Currently: ' . $call_api->author . ' ' . $call_api->contributors;
+    $log .= 'Term is not within author or contributors - 0 Point boost<br>';
 }
 
-$max_points = 12.3;
+$max_points = 14.3;
 
-echo 'Appearing in search results with points: <strong>' . $total_points . '</strong>. Now applying filtering of results.<br>';
+$log .= 'Appearing in search results with points: <strong>' . $total_points . '</strong>. Now applying filtering of results.<br>';
 
-echo 'For the plugin modification time, for every 180 days the plugin hasn\'t been modified we half our score <br>';
+$log .= 'For the plugin modification time, for every 180 days the plugin hasn\'t been modified we half our score <br>';
 
-echo 'For every 0.4 versions behind the current core version <br>';
+$log .= 'For every 0.4 versions behind the current core version <br>';
 
 
-echo 'For every install we have, increase the points. Active installs are: ' . $call_api->active_installs . '<br>';
+$log .= 'For every install we have, increase the points. Active installs are: ' . $call_api->active_installs . '<br>';
 if (empty($call_api->active_installs)) {
     $call_api->active_installs = 1;
 }
@@ -199,10 +205,10 @@ $score = log(2 + 0.375 * $call_api->active_installs);
 // no change if no active installs
 $total_points *= $score;
 $max_points *= $score;
-echo 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying active installs <br>';
+$log .= 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying active installs <br>';
 
 $resolved_percentage = $call_api->support_threads_resolved / $call_api->support_threads;
-echo 'We look at support requests: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved %: ' . $resolved_percentage . '<br>';
+$log .= 'We look at support requests: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved %: ' . $resolved_percentage . '<br>';
 if (is_nan($resolved_percentage)) {
     $resolved_percentage = 0.5;
 }
@@ -211,11 +217,11 @@ $pre_score = $total_points;
 $score = log(2 + 0.25 * $resolved_percentage);
 $total_points *= $score;
 $max_points *= $score;
-echo 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying support threads <br>';
+$log .= 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying support threads <br>';
 
 
 $five_star_rating = ($call_api->rating / 20);
-echo 'We look at the ratings: ' . $call_api->rating . '(' . $five_star_rating . ')<br>';
+$log .= 'We look at the ratings: ' . $call_api->rating . '(' . $five_star_rating . ')<br>';
 if (!empty($call_api->rating)) {
     $call_api->rating = 2.5;
 }
@@ -224,11 +230,26 @@ $pre_score = $total_points;
 // no change if no active installs
 $total_points *= $score;
 $max_points *= $score;
-echo 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying ratings <br>';
+$log .= 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying ratings <br>';
 
+
+$recommendations[] = 'Increase active installs. Currently: ' . $call_api->active_installs;
+if ($five_star_rating !== 5) {
+    $recommendations[] = 'Increase positive ratings. Currently: ' . $five_star_rating;
+}
+if ($resolved_percentage !== 1) {
+    $recommendations[] = 'Increase support threads resolved. Currently: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved: ' . ($resolved_percentage * 100) . '%';
+}
 
 //old_score * log(1 + factor * number_of_votes)
 
-echo '<strong>Final Score is: ' . (int)$total_points . '. Can achieve a total score of: ' . (int)$max_points . '</strong>';
+$log .= '<strong>Final Score is: ' . (int)$total_points . '. Can achieve a total score of: ' . (int)$max_points . '</strong>';
 
-dd($call_api);
+global $wpa_output;
+
+$wpa_output = [
+    'log' => $log,
+    'score' => round($total_points, 2),
+    'max_score' => round($max_points, 2),
+    'recommendations' => $recommendations
+];
