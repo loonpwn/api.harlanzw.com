@@ -70,4 +70,8 @@
 
     </div>
 
+    @php
+        do_action('acf-widget/render');
+    @endphp
+
 @endsection

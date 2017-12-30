@@ -21,7 +21,8 @@ add_filter('acf-widgets/register', function () {
         'posts',
         'full-width-image',
         'clients',
-        'two-columns'
+        'two-columns',
+        'contact-form-7'
     ];
 });
 
