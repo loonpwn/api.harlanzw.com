@@ -39,9 +39,15 @@
             <div class="card" style="margin-bottom: 1rem">
                 <div class="card-body">
                     <h3 class="card-title">Recommendations</h3>
-                    <ul>
-                        {!! '<li>' . implode('</li><li>', $wpa_output['recommendations']) . '</li>' !!}
-                    </ul>
+                    @if(!empty($wpa_output['recommendations']))
+                        <ul>
+                            {!! '<li>' . implode('</li><li>', $wpa_output['recommendations']) . '</li>' !!}
+                        </ul>
+                    @else
+                        <div class="alert alert-warning">
+                            <p>No optimizations could be found for this search term.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -53,7 +59,7 @@
             </code>
         @else
             <div class="alert alert-danger">
-                <p>Invalid plugin slug provided.</p>
+                <p>{!! $wpa_output['error'] !!}</p>
             </div>
             <a href="/wpa/" class="btn btn-link">Search Again</a>
         @endif

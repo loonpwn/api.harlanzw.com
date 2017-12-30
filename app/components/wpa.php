@@ -32,7 +32,7 @@ $call_api = plugins_api('plugin_information', array('slug' => $plugin, 'fields' 
 
 if ($call_api instanceof WP_Error) {
     $wpa_output = [
-        'error' => 'Invalid Plugin Provided!',
+        'error' => 'Invalid plugin slug provided.',
     ];
     return;
 }
@@ -242,18 +242,22 @@ $max_points *= $score;
 $log .= 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying ratings <br>';
 
 
-$recommendations[] = 'Increase active installs. Currently: ' . $call_api->active_installs;
-if ($five_star_rating !== 5) {
+if ($call_api->active_installs < 10000) {
+    $recommendations[] = 'Increase active installs. Currently: ' . $call_api->active_installs;
+}
+if ($five_star_rating <= 4) {
     $recommendations[] = 'Increase positive ratings. Currently: ' . $five_star_rating;
 }
-if ($resolved_percentage !== 1) {
-    $recommendations[] = 'Increase support threads resolved. Currently: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved: ' . ($resolved_percentage * 100) . '%';
+
+$resolved_percentage = round($resolved_percentage * 100, 2);
+
+if ($resolved_percentage <= 75) {
+    $recommendations[] = 'Increase support threads resolved. Currently: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved: ' . $resolved_percentage . '%';
 }
 
 //old_score * log(1 + factor * number_of_votes)
 
 $log .= '<strong>Final Score is: ' . (int)$total_points . '. Can achieve a total score of: ' . (int)$max_points . '</strong>';
-
 
 $wpa_output = [
     'log' => $log,
