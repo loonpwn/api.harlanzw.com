@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "93b60e515589bb838c1486efd864d7ee",
+    "content-hash": "9e365cbf772c7e79cd6d469d2a049ca9",
     "packages": [
         {
             "name": "advanced-custom-fields/advanced-custom-fields-pro",
@@ -1706,6 +1706,26 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/imsanity/"
+        },
+        {
+            "name": "wpackagist-plugin/postmark-approved-wordpress-plugin",
+            "version": "1.9.5",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/postmark-approved-wordpress-plugin/",
+                "reference": "trunk"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/postmark-approved-wordpress-plugin.zip?timestamp=1513780351",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/postmark-approved-wordpress-plugin/"
         },
         {
             "name": "wpackagist-plugin/safe-svg",
