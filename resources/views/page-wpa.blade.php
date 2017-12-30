@@ -2,6 +2,9 @@
 
 @section('content')
 
+    @php
+        do_action('acf-widget/render', ['include' => ['wysiwyg', 'call-to-action']]);
+    @endphp
 
     <div class="container">
         <h1>Plugin SEO</h1>
@@ -12,7 +15,7 @@
             <h3>Alpha Version</h3> This is a very early release version, there may be bugs with the final score and recommendations.
         </div>
 
-        <?php
+    <?php
         global $wpa_output;
         ?>
         @if(empty($wpa_output))
@@ -71,7 +74,6 @@
     </div>
 
     @php
-        do_action('acf-widget/render');
+        do_action('acf-widget/render', ['exclude' => ['wysiwyg', 'call-to-action']]);
     @endphp
-
 @endsection
