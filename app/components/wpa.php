@@ -45,7 +45,26 @@ if ($call_api instanceof WP_Error) {
 $installs = json_decode(file_get_contents('https://api.wordpress.org/stats/plugin/1.0/downloads.php?slug=' . $plugin . '&historical_summary=13'))->all_time;
 
 // get the readme.txt file
-$readme = new \App\Helpers\ReadmeParser('https://plugins.svn.wordpress.org/' . $plugin . '/trunk/readme.txt');
+$readme_file = [
+    'readme.txt',
+    'README.txt',
+    'README.MD'
+];
+
+foreach ($readme_file as $file) {
+    $url = 'https://plugins.svn.wordpress.org/' . $plugin . '/trunk/' . $file;
+    if (@file_get_contents($url)) {
+        $readme = new \App\Helpers\ReadmeParser($url);
+        break;
+    }
+}
+
+if (empty($readme)) {
+    $wpa_output = [
+        'error' => 'Failed to find plugin readme.',
+    ];
+    return;
+}
 
 $call_api->excerpt = $readme->short_description;
 // Print the entire match result
@@ -221,10 +240,13 @@ $total_points *= $score;
 $max_points *= $score;
 $log .= 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying active installs <br>';
 
-$resolved_percentage = $call_api->support_threads_resolved / $call_api->support_threads;
-$log .= 'We look at support requests: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved %: ' . $resolved_percentage . '<br>';
-if (is_nan($resolved_percentage)) {
+if ($call_api->support_threads_resolved > 0) {
+    $resolved_percentage = $call_api->support_threads_resolved / $call_api->support_threads;
+    $log .= 'We look at support requests: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved %: ' . $resolved_percentage . '<br>';
+} else {
     $resolved_percentage = 0.5;
+    $log .= 'No support threads resolved. Setting base to 50% resolved.<br>';
+    $recommendations[] = 'Have at least one resolved support thread';
 }
 $pre_score = $total_points;
 // no change if no active installs
@@ -233,12 +255,13 @@ $total_points *= $score;
 $max_points *= $score;
 $log .= 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying support threads <br>';
 
-
+if ((int)$call_api->rating === 0) {
+    $log .= 'No ratings. Setting base rating to 2.5 <br>';
+    $call_api->rating = 50;
+}
 $five_star_rating = ($call_api->rating / 20);
 $log .= 'We look at the ratings: ' . $call_api->rating . '(' . $five_star_rating . ')<br>';
-if (!empty($call_api->rating)) {
-    $call_api->rating = 2.5;
-}
+
 $score = sqrt(0.25 * $five_star_rating);
 $pre_score = $total_points;
 // no change if no active installs
