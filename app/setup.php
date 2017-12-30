@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\models\WPASearch;
 use Roots\Sage\Assets\JsonManifest;
 use Roots\Sage\Container;
 use Roots\Sage\Template\Blade;
@@ -146,4 +147,6 @@ add_action('after_setup_theme', function () {
     sage('blade')->compiler()->directive('template', function ($arg) {
         return "<?= \\App\\template($arg); ?>";
     });
+
+    WPASearch::setup();
 });

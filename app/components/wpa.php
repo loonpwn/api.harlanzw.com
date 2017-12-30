@@ -1,7 +1,7 @@
 <?php
 
+use App\models\WPASearch;
 use Illuminate\Support\Str;
-use TextAnalysis\NGrams\NGramFactory;
 
 if (empty($_GET['action']) || $_GET['action'] !== 'plugin-search') {
     return;
@@ -29,6 +29,11 @@ $call_api = plugins_api('plugin_information', array('slug' => $plugin, 'fields' 
     'group' => true,
     'contributors' => true,
 ]));
+
+WPASearch::create([
+    'post_title' => 'Plugin: ' . $plugin,
+    'post_content' => $search_term
+]);
 
 if ($call_api instanceof WP_Error) {
     $wpa_output = [

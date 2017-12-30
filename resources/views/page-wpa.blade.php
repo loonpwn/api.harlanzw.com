@@ -8,6 +8,10 @@
 
         <p>Instantly improve your ranking within WordPress plugin archive. For information on how these formulas work checkout the article <a href="https://freemius.com/blog/seo-on-new-plugin-repository/" target="_blank">here</a>.</p>
 
+        <div class="alert alert-warning">
+            <h3>Alpha Version</h3> This is a very early release version, there may be bugs with the final score and recommendations.
+        </div>
+
         <?php
         global $wpa_output;
         ?>
@@ -30,7 +34,7 @@
                 <button type="submit" class="btn btn-primary">Find score</button>
             </form>
         @elseif(!isset($wpa_output['error']))
-            <p>Looking at the search score for <strong>{{  $_POST['plugin-url'] }}</strong> with search term <strong>{{  $_POST['search-term'] }}</strong>.</p>
+            <p>Looking at the search score for <strong>{{ $_GET['plugin-url'] }}</strong> with search term <strong>{{ $_GET['search-term'] }}</strong>.</p>
 
             <h3>Current Score</h3>
             <p class="score">{{ $wpa_output['score'] }}</p>
