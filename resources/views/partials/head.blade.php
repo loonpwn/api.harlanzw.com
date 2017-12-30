@@ -20,5 +20,6 @@
     <meta content="initial-scale=1, shrink-to-fit=no, width=device-width" name="viewport">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i|Material+Icons" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     @php(wp_head())
 </head>
