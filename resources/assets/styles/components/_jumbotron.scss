@@ -1,0 +1,10 @@
+.jumbotron {
+    .typography-display-4 {
+        @include sm-max {
+            font-size: 2em;
+            text-align: center;
+            font-weight: bold;
+            line-height: 1.5em;
+        }
+    }
+}
