@@ -3,5 +3,9 @@ code {
     max-height: 600px;
     overflow-y: auto;
     display: block;
-    margin-bottom: 2em;
+    margin: 1em 0;
+
+    br {
+        display: none;
+    }
 }
