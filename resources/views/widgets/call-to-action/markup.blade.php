@@ -2,7 +2,7 @@
      data-bg="{!! wp_get_attachment_image_src($background_image, 'full')[0] !!}">
     <div class="justify-content-center call-to-action__container container">
         @if(!empty($title))
-            <h1 class="typography-display-4">{{ $title }}</h1>
+            <h1 class="typography-display-3">{{ $title }}</h1>
         @endif
         @if(!empty($sub_title))
             <p class="font-weight-light typography-title call-to-action__subtitle">
