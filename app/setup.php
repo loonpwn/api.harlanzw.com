@@ -3,6 +3,7 @@
 namespace App;
 
 use App\models\WPASearch;
+use Blockfolio\API;
 use Roots\Sage\Assets\JsonManifest;
 use Roots\Sage\Container;
 use Roots\Sage\Template\Blade;
@@ -100,6 +101,13 @@ add_action('after_setup_theme', function () {
     sage()->singleton('sage.assets', function () {
         return new JsonManifest(config('assets.manifest'), config('assets.uri'));
     });
+
+	/**
+	 * Add JsonManifest to Sage container
+	 */
+	sage()->singleton('blockfolio', function () {
+		return new API();
+	});
 
     /**
      * Add Blade to Sage container

@@ -31,3 +31,16 @@ html {
 .btn-primary {
   color: white !important;
 }
+
+.dataTables_wrapper {
+  margin: 1em 0;
+  .row {
+    width: 100%;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .sorting_asc, .sorting_desc, .sorting {
+    cursor: pointer;
+  }
+
+}

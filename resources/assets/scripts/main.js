@@ -3,6 +3,9 @@ import 'jquery';
 // Import everything from autoload
 import 'bootstrap';
 import 'daemonite-material';
+import 'select2';
+import 'datatables.net-bs';
+
 // make header nicer
 import 'headroom.js';
 import 'headroom.js/dist/jQuery.headroom.js';

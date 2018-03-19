@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Blockfolio\API;
 use Roots\Sage\Container;
 
 /**
@@ -68,6 +69,25 @@ function template_path($file, $data = []) {
  */
 function asset_path($asset) {
     return sage('assets')->getUri($asset);
+}
+
+/**
+ * @return API
+ */
+function blockfolio() {
+	return sage('blockfolio');
+}
+
+
+function remember($key, $func, $time = 60 * 10) {
+    $cache_key = 'data-' . $key;
+    if (($content = get_transient($cache_key)) !== false) {
+        return $content;
+    }
+    // 10 minute cache
+    $data = $func();
+    set_transient($cache_key, $data, $time);
+    return $data;
 }
 
 /**

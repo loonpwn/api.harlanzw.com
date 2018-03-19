@@ -1,5 +1,7 @@
 export default {
     ready: () => {
-        // do stuff
+        $('.select2').select2();
+
+        $('.datatable').DataTable();
     },
 };
