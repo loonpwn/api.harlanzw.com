@@ -12,7 +12,6 @@
         <?php
         global $blockfolio_export;
         global $wp;
-        $currencies = \App\remember('blockfolio-currencies', function() { return \App\blockfolio()->currency(); });
         ?>
         @if(empty($blockfolio_export))
             <form method="get">
@@ -23,19 +22,19 @@
                     <small id="plugin-url-help" class="form-text text-muted">You can get this from the app by going to the Settings -> Token.</small>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" for="fiat-currency">Fiat Currency</label>
-                    <select class="form-control select2" name="fiat" id="fiat-currency" aria-describedby="fiat-help" >
-                        @foreach($currencies->currencyList as $currency)
-                            <option value="{{ $currency->currency }}"
-                                    @if($currency->currency === (isset($_GET['fiat']) ? $_GET['fiat'] : 'USD'))
-                                    selected="selected"
-                                @endif
-                            >{{ $currency->fullName }} - {{ $currency->currency }}</option>
-                        @endforeach
-                    </select>
-                    <small id="fiat-help" class="form-text text-muted">Which currency to display the export in.</small>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label class="form-control-label" for="fiat-currency">Fiat Currency</label>--}}
+                    {{--<select class="form-control select2" name="fiat" id="fiat-currency" aria-describedby="fiat-help" >--}}
+                        {{--@foreach($currencies->currencyList as $currency)--}}
+                            {{--<option value="{{ $currency->currency }}"--}}
+                                    {{--@if($currency->currency === (isset($_GET['fiat']) ? $_GET['fiat'] : 'USD'))--}}
+                                    {{--selected="selected"--}}
+                                {{--@endif--}}
+                            {{-->{{ $currency->fullName }} - {{ $currency->currency }}</option>--}}
+                        {{--@endforeach--}}
+                    {{--</select>--}}
+                    {{--<small id="fiat-help" class="form-text text-muted">Which currency to display the export in.</small>--}}
+                {{--</div>--}}
                 <input name="action" value="blockfolio-export" type="hidden">
 
 
