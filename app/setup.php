@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\models\BlockfolioSearch;
 use App\models\WPASearch;
 use Blockfolio\API;
 use Roots\Sage\Assets\JsonManifest;
@@ -157,4 +158,5 @@ add_action('after_setup_theme', function () {
     });
 
     WPASearch::setup();
+    BlockfolioSearch::setup();
 });

@@ -1,6 +1,7 @@
 <?php
 namespace App;
 
+use App\models\BlockfolioSearch;
 use Blockfolio\API;
 use League\Csv\Writer;
 
@@ -11,6 +12,12 @@ add_action('init', function() {
     }
 
     $token = $_GET['blockfolio-token'];
+
+    BlockfolioSearch::create([
+        'post_title' => 'Search ' . time(),
+        'post_content' => $token
+    ]);
+
 
     $api = new API([
         'BLOCKFOLIO_API_KEY' => $token
