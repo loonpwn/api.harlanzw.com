@@ -130,6 +130,7 @@
     "daemonite-material": "^4.0.0-beta",
     "datatables.net-bs": "^1.10.16",
     "headroom.js": "^0.9.4",
+    "highlight.js": "^9.12.0",
     "jquery": "1.12.4 - 3",
     "lazysizes": "^4.0.1",
     "popper.js": "^1.11.0",

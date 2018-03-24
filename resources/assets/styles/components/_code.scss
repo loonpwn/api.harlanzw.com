@@ -1,11 +1,21 @@
-code {
-    white-space: pre;
-    max-height: 600px;
-    overflow-y: auto;
-    display: block;
-    margin: 1em 0;
+.highlight {
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: #2b2b2b;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 
-    br {
-        display: none;
-    }
+  @include media-breakpoint-up(sm) {
+    padding: 1.5rem;
+  }
+  pre {
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    background-color: transparent;
+    border: 0;
+  }
+  pre code {
+    font-size: inherit;
+  }
 }

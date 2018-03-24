@@ -4,14 +4,13 @@
   background-position: 50% 50%;
 
   &__container {
+
     align-self: center;
-    display: inline-flex;
-    max-width: 320px;
-    text-shadow: 0 0 5px rgba(0,0,0,0.5);
-  }
-  &__subtitle {
-    margin-left: 1rem;
-    align-self: center;
-    display: flex;
+    text-align: center;
+    // Make text a little bit easier to read
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    @include sm() {
+      max-width: 50%;
+    }
   }
 }

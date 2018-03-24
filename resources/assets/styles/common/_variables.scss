@@ -1,12 +1,13 @@
+@import "colours";
 @import "~daemonite-material/assets/scss/colors";
 
 $font-size-base:            1rem;   // 14px
 $headings-margin-y:         20px;
 
 $primary: (
-    color: #ffa000,
-    dark:  darken(#ffa000, 20%),
-    light: lighten(#ffa000, 20%)
+    color: $main-brand-colour,
+    dark:  darken($main-brand-colour, 20%),
+    light: lighten($main-brand-colour, 20%)
 );
 
 $secondary: (
@@ -14,3 +15,17 @@ $secondary: (
     dark:  $material-color-teal-a400,
     light: $material-color-teal-a100
 );
+
+
+$container-max-widths: (
+  sm: 520px,
+  md: 540px,
+  lg: 720px,
+  xl: 960px
+) !default;
+
+
+$link-color:            map-get($brand-colours, 'light-accent');
+$link-color-hover:      darken(map-get($brand-colours, 'light-accent'), 20%);
+$link-decoration:       none !default;
+$link-decoration-hover: underline !default;

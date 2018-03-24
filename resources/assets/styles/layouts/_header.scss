@@ -1,3 +1,5 @@
+$header-width: 30px;
+
 .banner .nav li {
   @extend .nav-item;
 }
@@ -6,11 +8,41 @@
   @extend .nav-link;
 }
 
-.menu-item {
-  padding: 0.5em 1em;
+.menu-item > a {
+  display: block;
+  padding: 0.5em 3em 0.5em 0.5em;
+  transition: transform 0.2s;
+  transform: translateX(0px);
+  &:hover {
+    transform: translateX(5px);
+  }
 }
 
 .logo {
   height: 40px;
   width: auto;
+}
+
+.headroom {
+  width: 100%;
+  @include sm() {
+    width: $header-width;
+  }
+}
+
+
+.navbar {
+  padding: 0.625rem 10px;
+  width: 100%;
+  .nav-primary {
+    font-weight: bold;
+    color: white;
+  }
+  a {
+    color: white !important;
+  }
+  @include sm() {
+    width: $header-width;
+    padding: 0.625rem 10px 999px 10px;
+  }
 }

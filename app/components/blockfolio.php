@@ -3,6 +3,7 @@ namespace App;
 
 use App\models\BlockfolioSearch;
 use Blockfolio\API;
+use Illuminate\Support\Str;
 use League\Csv\Writer;
 
 add_action('init', function() {
@@ -19,15 +20,37 @@ add_action('init', function() {
     ]);
 
 
+    dd($token);
     $api = new API([
         'BLOCKFOLIO_API_KEY' => $token
     ]);
 
-    $export = remember(substr($token, 0, 20), function() use ($api) {
-        return $api->get_all_positions();
+    global $blockfolio_export;
+
+    $blockfolio_export = new \stdClass();
+
+    $blockfolio_export->errorMessage = false;
+    $blockfolio_export->success = true;
+
+    $export = remember(substr($token, 0, 20), function() use ($api, $blockfolio_export) {
+        $positions = false;
+        try {
+            $positions = $api->get_all_positions();
+        } catch (\Exception $e) {
+            dd($e);
+            if (Str::contains($e->getMessage(), '401')) {
+                $blockfolio_export->error_message = 'Invalid Token';
+                $blockfolio_export->success = false;
+            }
+            // invalid
+        }
+        return $positions;
     });
 
-    global $blockfolio_export;
+    if (!$blockfolio_export->success) {
+        return;
+    }
+
 
     $blockfolio_export = $export;
 

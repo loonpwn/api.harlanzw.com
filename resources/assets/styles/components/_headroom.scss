@@ -2,13 +2,39 @@ $headroom-header-z-index: 99;
 
 .headroom {
   will-change: transform;
-  transition: transform 200ms linear;
+  transition: transform 0.2s linear;
 }
-.headroom--pinned {
-  transform: translateY(0%);
-}
+
 .headroom--unpinned {
-  transform: translateY(-100%);
+  transform: translateX(-100%);
+  @include sm() {
+    transform: translateX(-200px);
+  }
+}
+
+.headroom--pinned {
+  transform: translateX(0%);
+  .navbar {
+    a {
+      color: white !important;
+      @include sm() {
+        color: $main-brand-colour !important;
+      }
+    }
+  }
+  background-color: $main-brand-colour;
+  @include sm() {
+    background-color: transparent;
+  }
+}
+
+.headroom--top {
+  .navbar {
+    background-color: $main-brand-colour;
+    a {
+      color: white !important;
+    }
+  }
 }
 
 // if the header has the headroom class, add the required styles.
@@ -16,11 +42,6 @@ $headroom-header-z-index: 99;
 header.headroom {
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
   z-index: $headroom-header-z-index
-}
-
-// offset the content of the page to the fixed height of the header
-header.headroom + .wrap {
-  margin-top: 56px;
 }

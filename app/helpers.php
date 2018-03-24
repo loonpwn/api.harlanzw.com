@@ -81,7 +81,7 @@ function blockfolio() {
 
 function remember($key, $func, $time = 60 * 10) {
     $cache_key = 'data-' . $key;
-    if (($content = get_transient($cache_key)) !== false) {
+    if (!empty($content = get_transient($cache_key))) {
         return $content;
     }
     // 10 minute cache

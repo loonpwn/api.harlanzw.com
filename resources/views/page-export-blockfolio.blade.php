@@ -13,7 +13,17 @@
         global $blockfolio_export;
         global $wp;
         ?>
-        @if(empty($blockfolio_export))
+        @if(empty($blockfolio_export) || !$blockfolio_export->success)
+
+
+            @if(!$blockfolio_export->success)
+                <div class="alert alert-danger">
+                    <h3>Invalid Token Provided</h3>
+                    <p>You need to supply a valid blockfolio token to export your data. </p>
+                    <img style="display: block; margin: 0 auto;" src="{{ \App\asset_path('images/blockfolio-token.png') }}" width="auto" height="400" alt="Export Blockfolio Token">
+                </div>
+            @endif
+
             <form method="get">
 
                 <div class="form-group">
@@ -23,17 +33,17 @@
                 </div>
 
                 {{--<div class="form-group">--}}
-                    {{--<label class="form-control-label" for="fiat-currency">Fiat Currency</label>--}}
-                    {{--<select class="form-control select2" name="fiat" id="fiat-currency" aria-describedby="fiat-help" >--}}
-                        {{--@foreach($currencies->currencyList as $currency)--}}
-                            {{--<option value="{{ $currency->currency }}"--}}
-                                    {{--@if($currency->currency === (isset($_GET['fiat']) ? $_GET['fiat'] : 'USD'))--}}
-                                    {{--selected="selected"--}}
-                                {{--@endif--}}
-                            {{-->{{ $currency->fullName }} - {{ $currency->currency }}</option>--}}
-                        {{--@endforeach--}}
-                    {{--</select>--}}
-                    {{--<small id="fiat-help" class="form-text text-muted">Which currency to display the export in.</small>--}}
+                {{--<label class="form-control-label" for="fiat-currency">Fiat Currency</label>--}}
+                {{--<select class="form-control select2" name="fiat" id="fiat-currency" aria-describedby="fiat-help" >--}}
+                {{--@foreach($currencies->currencyList as $currency)--}}
+                {{--<option value="{{ $currency->currency }}"--}}
+                {{--@if($currency->currency === (isset($_GET['fiat']) ? $_GET['fiat'] : 'USD'))--}}
+                {{--selected="selected"--}}
+                {{--@endif--}}
+                {{-->{{ $currency->fullName }} - {{ $currency->currency }}</option>--}}
+                {{--@endforeach--}}
+                {{--</select>--}}
+                {{--<small id="fiat-help" class="form-text text-muted">Which currency to display the export in.</small>--}}
                 {{--</div>--}}
                 <input name="action" value="blockfolio-export" type="hidden">
 
@@ -41,6 +51,7 @@
                 <button type="submit" class="btn btn-primary">Export</button>
             </form>
         @else
+
 
             <div class="text-center">
                 <h3>Portfolio Value</h3>

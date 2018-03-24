@@ -42,5 +42,12 @@ html {
   .sorting_asc, .sorting_desc, .sorting {
     cursor: pointer;
   }
-
 }
+
+body {
+  margin-top: 58px;
+  @include sm() {
+    margin-top: 0;
+  }
+}
+

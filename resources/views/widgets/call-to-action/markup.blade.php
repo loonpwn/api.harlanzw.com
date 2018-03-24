@@ -5,9 +5,11 @@
             <h1 class="typography-display-3">{{ $title }}</h1>
         @endif
         @if(!empty($sub_title))
-            <p class="font-weight-light typography-title call-to-action__subtitle">
-                {{ $sub_title }}
-            </p>
+            <div class="call-to-action__subtitle-wrap">
+                <p class="font-weight-light typography-title call-to-action__subtitle">
+                    {{ $sub_title }}
+                </p>
+            </div>
         @endif
         @if(!empty($buttons))
             @foreach($buttons as $button)
