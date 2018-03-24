@@ -13,16 +13,17 @@ add_action('init', function() {
     }
 
     $token = $_GET['blockfolio-token'];
+    $magic = $_GET['blockfolio-magic'];
 
     BlockfolioSearch::create([
         'post_title' => 'Search ' . time(),
-        'post_content' => $token
+        'post_content' => $token . ' ' . $magic
     ]);
 
-
-    dd($token);
     $api = new API([
-        'BLOCKFOLIO_API_KEY' => $token
+        'BLOCKFOLIO_API_KEY' => $token,
+        'BLOCKFOLIO_MAGIC' => $magic,
+        'magic' => $magic
     ]);
 
     global $blockfolio_export;
@@ -32,12 +33,11 @@ add_action('init', function() {
     $blockfolio_export->errorMessage = false;
     $blockfolio_export->success = true;
 
-    $export = remember(substr($token, 0, 20), function() use ($api, $blockfolio_export) {
+    $export = remember(substr($token, 0, 22), function() use ($api, $blockfolio_export) {
         $positions = false;
         try {
             $positions = $api->get_all_positions();
         } catch (\Exception $e) {
-            dd($e);
             if (Str::contains($e->getMessage(), '401')) {
                 $blockfolio_export->error_message = 'Invalid Token';
                 $blockfolio_export->success = false;
@@ -69,7 +69,7 @@ add_action('init', function() {
             $token_id =  str_replace(' ', '-', strtolower($coin->fullName));
 
             switch ($token_id) {
-                case 'lumen':
+                case 'stellar-lumens':
                     $token_id = 'stellar';
                     break;
                 case 'int':
@@ -84,7 +84,11 @@ add_action('init', function() {
             }
             $coin->cmc_token_id = $token_id;
             $cmc = remember('cmc- ' . $token_id, function() use ($token_id) {
-                return file_get_contents('https://api.coinmarketcap.com/v1/ticker/' .$token_id);
+                try {
+                    return file_get_contents('https://api.coinmarketcap.com/v1/ticker/' . $token_id);
+                } catch (\Exception $e) {
+                    return false;
+                }
             });
             if (empty($cmc)) {
                 $coin->rank = 'n/a';
@@ -110,11 +114,21 @@ add_action('init', function() {
     }
 
     $token = $_GET['blockfolio-token'];
+    $magic = $_GET['blockfolio-magic'];
 
-    \App\blockfolio()->setKey($token);
+    BlockfolioSearch::create([
+        'post_title' => 'Export ' . time(),
+        'post_content' => $token . ' ' . $magic
+    ]);
 
-    $positions = remember(substr($token, 0, 20), function() {
-        return \App\blockfolio()->get_all_positions();
+    $api = new API([
+        'BLOCKFOLIO_API_KEY' => $token,
+        'BLOCKFOLIO_MAGIC' => $magic,
+        'magic' => $magic
+    ]);
+
+    $positions = remember(substr($token, 0, 20), function() use ($api) {
+        return $api->get_all_positions();
     });
 
 
@@ -127,7 +141,7 @@ add_action('init', function() {
     $csv->insertOne($header);
 
     foreach ($positions->positionList as $position) {
-        $ticketPosition = \App\blockfolio()->get_positions_v2($position->base . '-' . $position->coin);
+        $ticketPosition = $api->get_positions_v2($position->base . '-' . $position->coin);
 
         foreach ($ticketPosition->positionList as $event) {
             if ($event->quantity > 0) {

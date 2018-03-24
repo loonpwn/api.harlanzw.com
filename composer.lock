@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c50ac12b30b5a30b05505dd015edab46",
+    "content-hash": "7544391c4f1071c8840aa5e55305676a",
     "packages": [
         {
             "name": "advanced-custom-fields/advanced-custom-fields-pro",
@@ -965,16 +965,16 @@
         },
         {
             "name": "loonpwn/blockfolio-php",
-            "version": "v1.2",
+            "version": "v1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/loonpwn/blockfolio-php.git",
-                "reference": "dc120e4583a9bbf8ef1a1be4e4ee8106fa1b4e02"
+                "reference": "655d703db599c455012ca8e43985f0976c1bde57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/loonpwn/blockfolio-php/zipball/dc120e4583a9bbf8ef1a1be4e4ee8106fa1b4e02",
-                "reference": "dc120e4583a9bbf8ef1a1be4e4ee8106fa1b4e02",
+                "url": "https://api.github.com/repos/loonpwn/blockfolio-php/zipball/655d703db599c455012ca8e43985f0976c1bde57",
+                "reference": "655d703db599c455012ca8e43985f0976c1bde57",
                 "shasum": ""
             },
             "require": {
@@ -1015,7 +1015,7 @@
                 "cryptocurrency",
                 "portfolio"
             ],
-            "time": "2018-03-20T03:16:38+00:00"
+            "time": "2018-03-24T00:13:18+00:00"
         },
         {
             "name": "michelf/php-markdown",

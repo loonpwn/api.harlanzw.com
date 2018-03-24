@@ -13,40 +13,32 @@
         global $blockfolio_export;
         global $wp;
         ?>
-        @if(empty($blockfolio_export) || !$blockfolio_export->success)
+        @if(!empty($blockfolio_export) && !$blockfolio_export->success)
 
+            <div class="alert alert-danger">
+                <h3>Invalid Token/Magic Provided</h3>
+                <p>You need to supply a valid blockfolio token/magic to export your data. </p>
+                <img style="display: block; margin: 0 auto;" src="{{ \App\asset_path('images/blockfolio-token.png') }}" width="auto" height="400" alt="Export Blockfolio Token">
+            </div>
+        @endif
 
-            @if(!$blockfolio_export->success)
-                <div class="alert alert-danger">
-                    <h3>Invalid Token Provided</h3>
-                    <p>You need to supply a valid blockfolio token to export your data. </p>
-                    <img style="display: block; margin: 0 auto;" src="{{ \App\asset_path('images/blockfolio-token.png') }}" width="auto" height="400" alt="Export Blockfolio Token">
-                </div>
-            @endif
+        @if(empty($blockfolio_export))
 
             <form method="get">
 
                 <div class="form-group">
-                    <label class="form-control-label" for="plugin-url">Blockfolio Token</label>
+                    <label class="form-control-label" for="lockfolio-token">Blockfolio Token</label>
                     <input type="text" class="form-control" name="blockfolio-token" id="blockfolio-token" aria-describedby="plugin-url-help" placeholder="Enter Token">
                     <small id="plugin-url-help" class="form-text text-muted">You can get this from the app by going to the Settings -> Token.</small>
                 </div>
 
-                {{--<div class="form-group">--}}
-                {{--<label class="form-control-label" for="fiat-currency">Fiat Currency</label>--}}
-                {{--<select class="form-control select2" name="fiat" id="fiat-currency" aria-describedby="fiat-help" >--}}
-                {{--@foreach($currencies->currencyList as $currency)--}}
-                {{--<option value="{{ $currency->currency }}"--}}
-                {{--@if($currency->currency === (isset($_GET['fiat']) ? $_GET['fiat'] : 'USD'))--}}
-                {{--selected="selected"--}}
-                {{--@endif--}}
-                {{-->{{ $currency->fullName }} - {{ $currency->currency }}</option>--}}
-                {{--@endforeach--}}
-                {{--</select>--}}
-                {{--<small id="fiat-help" class="form-text text-muted">Which currency to display the export in.</small>--}}
-                {{--</div>--}}
-                <input name="action" value="blockfolio-export" type="hidden">
+                <div class="form-group">
+                    <label class="form-control-label" for="blockfolio-magic">Blockfolio Magic</label>
+                    <input type="text" class="form-control" name="blockfolio-magic" id="blockfolio-magic" aria-describedby="magic-help" placeholder="Enter Magic">
+                    <small id="magic-help" class="form-text text-muted">This requires packet sniffing to detect the magic of your account.</small>
+                </div>
 
+                <input name="action" value="blockfolio-export" type="hidden">
 
                 <button type="submit" class="btn btn-primary">Export</button>
             </form>
@@ -82,7 +74,7 @@
 
                     <div class="text-center" style="margin: 1em 0;">
                         <div class="btn-group">
-                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
+                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&blockfolio-magic=' . $_GET['blockfolio-magic'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
                         </div>
                     </div>
 
