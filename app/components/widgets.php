@@ -60,7 +60,6 @@ add_filter('acf-widgets/widgets-dir', function () {
     return ROOT_DIR . '/resources/views/widgets/';
 });
 
-
 /**
  * Helper function for getting a list of active widgets for a post
  * @param bool $post_id

@@ -3,6 +3,14 @@
     "main": [
       "./styles/main.scss",
       "./scripts/main.js"
+    ],
+    "data": [
+      "./scripts/analytics.js",
+      "autotrack/lib/plugins/event-tracker",
+      "autotrack/lib/plugins/clean-url-tracker",
+      "autotrack/lib/plugins/outbound-link-tracker",
+      "autotrack/lib/plugins/max-scroll-tracker",
+      "autotrack/lib/plugins/page-visibility-tracker"
     ]
   },
   "distPath": "/web/app/themes/harlanzw.com/dist",

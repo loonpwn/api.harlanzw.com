@@ -16,6 +16,10 @@ use Roots\Sage\Template\BladeProvider;
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('hzw/main.css', asset_path('styles/main.css'), false, null);
     wp_enqueue_script('hzw/main.js', asset_path('scripts/main.js'), ['jquery'], null, true);
+
+    wp_enqueue_script('hzw/data.js', asset_path('scripts/data.js'), [], null, true);
+    wp_enqueue_script('analytics.js', 'https://www.google-analytics.com/analytics.js', [], null, true);
+
 }, 100);
 
 /**

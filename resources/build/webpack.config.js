@@ -6,7 +6,6 @@ const CleanPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const CopyGlobsPlugin = require('copy-globs-webpack-plugin');
-
 const config = require('./config');
 
 const assetsFilenames = (config.enabled.cacheBusting) ? config.cacheBusting : '[name]';
@@ -201,6 +200,10 @@ let webpackConfig = {
 };
 
 /* eslint-disable global-require */
+
+// include our environment variables
+webpackConfig = merge(webpackConfig, require('./webpack.config.vars'));
+
 /** Let's only load dependencies as needed */
 
 if (config.enabled.optimize) {
