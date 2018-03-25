@@ -53,7 +53,6 @@ let webpackConfig = {
             },
             {
                 test: /\.js$/,
-                exclude: [/(node_modules|bower_components)(?![/|\\](bootstrap|foundation-sites))/],
                 use: [
                     {
                         loader: 'cache',

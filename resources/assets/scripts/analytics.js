@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import uuidv4 from 'uuid/v4';
 
 const dimensions = {
@@ -28,7 +27,7 @@ const ga = window.ga = window.ga || ((...args) => (ga.q = ga.q || []).push(args)
 
 const Analytics = {
 
-    loadPlugins: () => {
+    loadPlugins: function() {
         ga('require', 'cleanUrlTracker', {
             trailingSlash: 'add',
         });
@@ -54,19 +53,19 @@ const Analytics = {
         });
     },
 
-    customDimensions: () => {
+    customDimensions: function() {
         ga('set', dimensions.TRACKING_VERSION, TRACKING_VERSION);
         ga('set', dimensions.WP_ENV, process.env.WP_ENV);
-// eslint-disable-next-line no-undef
+        // eslint-disable-next-line no-undef
         ga('set', dimensions.COMMITHASH, COMMITHASH);
         ga('set', dimensions.WINDOW_ID, uuidv4());
 
-        ga((tracker) => {
+        ga(function(tracker) {
             const clientId = tracker.get('clientId');
             tracker.set(dimensions.CLIENT_ID, clientId);
 
             const originalBuildHitTask = tracker.get('buildHitTask');
-            tracker.set('buildHitTask', (model) => {
+            tracker.set('buildHitTask', function(model) {
                 model.set(dimensions.HIT_ID, uuidv4(), true);
                 model.set(dimensions.HIT_TIME, String(+new Date), true);
                 model.set(dimensions.HIT_TYPE, model.get('hitType'), true);
@@ -76,8 +75,7 @@ const Analytics = {
         });
     },
 
-    init: () => {
-
+    init: function() {
         ga('create', process.env.GA_ID, 'auto');
         ga('set', 'transport', 'beacon');
 
@@ -87,12 +85,12 @@ const Analytics = {
         Analytics.customEvents();
     },
 
-    sendNavigationTimingMetrics: () => {
+    sendNavigationTimingMetrics: function() {
         // Only track performance in supporting browsers.
         if (!(window.performance && window.performance.timing)) return;
 
         // If the window hasn't loaded, run this function after the `load` event.
-        if (document.readyState != 'complete') {
+        if (document.readyState !== 'complete') {
             window.addEventListener('load', Analytics.sendNavigationTimingMetrics);
             return;
         }
@@ -122,15 +120,12 @@ const Analytics = {
         }
     },
 
-    customEvents: () => {
+    customEvents: function() {
         $('.widget-contact-form-7 form').on('submit', function() {
             window.ga('send', 'event', {
                 eventCategory: 'Newsletter Register',
                 eventAction: 'Submit',
                 eventLabel: '',
-                hitCallback : function () {
-                    alert("Event received");
-                },
             });
         });
     },
