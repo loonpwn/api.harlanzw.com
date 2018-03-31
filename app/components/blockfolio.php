@@ -13,12 +13,9 @@ add_action('init', function() {
     }
 
     $token = $_GET['blockfolio-token'];
-    $magic = $_GET['blockfolio-magic'];
 
     $api = new API([
         'BLOCKFOLIO_API_KEY' => $token,
-        'BLOCKFOLIO_MAGIC' => $magic,
-        'magic' => $magic
     ]);
 
     global $blockfolio_export;
@@ -28,7 +25,9 @@ add_action('init', function() {
     $blockfolio_export->errorMessage = false;
     $blockfolio_export->success = true;
 
-    $export = remember(substr($token, 0, 22), function() use ($api, $blockfolio_export) {
+    $token_cache_key = substr($token, 0, 22);
+
+    $export = remember($token_cache_key, function() use ($api, $blockfolio_export) {
         $positions = false;
         try {
             $positions = $api->get_all_positions();
@@ -44,24 +43,20 @@ add_action('init', function() {
 
     if (!$blockfolio_export->success) {
         BlockfolioSearch::create([
-            'post_title' => 'Invalid Search ' . time(),
-            'post_content' => $token . ' ' . $magic
+            'post_title' => 'Invalid Search: ' . $token,
         ]);
         return;
     }
 
     // harlans token
-    if ($token !== 'eFLDXVoPY8E:APA91bGJrcMw22ewZx4KnLi3-Hh6BDGThPgB2_HJb4IE6A_3B-iQ_0u_nCGg6Gnuf-eGU_pzP2mtwQWypjePghNFLp1saePe6OA8uX_GsKF3Cnhg2AQQIwk6uellbWI2OzQAURhAOq5H') {
-        BlockfolioSearch::create([
-            'post_title'   => 'Valid Search ' . time(),
-            'post_content' => 'Token: ' . $token . "\nMagic: " . $magic
-        ]);
-    }
+    BlockfolioSearch::create([
+        'post_title' => 'Valid Search: ' . $token,
+    ]);
 
     $blockfolio_export = $export;
     $blockfolio_export->allPositions = [];
     foreach ($blockfolio_export->positionList as $position) {
-        $ticketPosition = remember(substr($token, 0, 20) . $position->base . '-' . $position->coin, function () use ($api, $position) {
+        $ticketPosition = remember($token_cache_key . $position->base . '-' . $position->coin, function () use ($api, $position) {
             return $api->get_positions_v2($position->base . '-' . $position->coin);
         });
         $blockfolio_export->allPositions[$position->coin] = $ticketPosition;
@@ -102,7 +97,8 @@ add_action('init', function() {
                 } catch (\Exception $e) {
                     return false;
                 }
-            });
+                // cache cmc for 24 hours
+            }, 60 * 60 * 24);
             if (empty($cmc)) {
                 $coin->rank = 'n/a';
                 return $coin;
@@ -127,17 +123,14 @@ add_action('init', function() {
     }
 
     $token = $_GET['blockfolio-token'];
-    $magic = $_GET['blockfolio-magic'];
 
     BlockfolioSearch::create([
         'post_title' => 'Export ' . time(),
-        'post_content' => $token . ' ' . $magic
+        'post_content' => $token
     ]);
 
     $api = new API([
         'BLOCKFOLIO_API_KEY' => $token,
-        'BLOCKFOLIO_MAGIC' => $magic,
-        'magic' => $magic
     ]);
 
     $positions = remember(substr($token, 0, 20), function() use ($api) {

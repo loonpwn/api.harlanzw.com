@@ -41,16 +41,16 @@
                     <small id="plugin-url-help" class="form-text text-muted">You can get this from the app by going to the Settings -> Token.</small>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" for="blockfolio-magic">Blockfolio Magic</label>
-                    <input
-                        ga-on="change"
-                        ga-event-category="Blockfolio"
-                        ga-event-action="Changed Magic"
-                        required
-                        type="text" class="form-control" name="blockfolio-magic" id="blockfolio-magic" aria-describedby="magic-help" placeholder="Enter Magic">
-                    <small id="magic-help" class="form-text text-muted">This requires packet sniffing to detect the magic of your account.</small>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label class="form-control-label" for="blockfolio-magic">Blockfolio Magic</label>--}}
+                    {{--<input--}}
+                        {{--ga-on="change"--}}
+                        {{--ga-event-category="Blockfolio"--}}
+                        {{--ga-event-action="Changed Magic"--}}
+                        {{--required--}}
+                        {{--type="text" class="form-control" name="blockfolio-magic" id="blockfolio-magic" aria-describedby="magic-help" placeholder="Enter Magic">--}}
+                    {{--<small id="magic-help" class="form-text text-muted">This requires packet sniffing to detect the magic of your account.</small>--}}
+                {{--</div>--}}
 
                 <input name="action" value="blockfolio-export" type="hidden">
 
