@@ -100,7 +100,7 @@
 
                     <div class="text-center" style="margin: 1em 0;">
                         <div class="btn-group">
-                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&blockfolio-magic=' . $_GET['blockfolio-magic'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
+                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
                         </div>
                     </div>
 
@@ -134,7 +134,7 @@
 
                     <div class="text-center" style="margin: 1em 0;">
                         <div class="btn-group">
-                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&blockfolio-magic=' . $_GET['blockfolio-magic'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
+                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
                         </div>
                     </div>
 

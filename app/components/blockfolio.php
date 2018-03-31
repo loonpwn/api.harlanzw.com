@@ -25,7 +25,7 @@ add_action('init', function() {
     $blockfolio_export->errorMessage = false;
     $blockfolio_export->success = true;
 
-    $token_cache_key = substr($token, 0, 22);
+    $token_cache_key = substr($token, 0, 24);
 
     $export = remember($token_cache_key, function() use ($api, $blockfolio_export) {
         $positions = false;
