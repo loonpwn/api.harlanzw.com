@@ -146,7 +146,7 @@
 
                                 <th>Coin</th>
                                 <th>Quantity</th>
-                                <th>BTC Price</th>
+                                <th>Price</th>
                                 <th>USD Price</th>
                                 <th>Time</th>
                                 <th>Exchange</th>
@@ -159,9 +159,9 @@
                                     <tr>
                                         <td>{{ $coin }}</td>
                                         <td>{{ $event->quantity }}</td>
-                                        <td>{{ $event->price }}</td>
-                                        <td>{{ $event->fiatPrice }}</td>
-                                        <td>{{ $event->date }}</td>
+                                        <td>{{ $event->priceString }}</td>
+                                        <td>{{ $event->priceFiatString }}</td>
+                                        <td>{{ date('d-m-y H:m', $event->date / 1000) }}</td>
                                         <td>{{ $event->exchange }}</td>
                                     </tr>
                                 @endforeach

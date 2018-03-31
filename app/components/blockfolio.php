@@ -25,7 +25,7 @@ add_action('init', function() {
     $blockfolio_export->errorMessage = false;
     $blockfolio_export->success = true;
 
-    $token_cache_key = substr($token, 0, 24);
+    $token_cache_key = substr($token, 0, 22);
 
     $export = remember($token_cache_key, function() use ($api, $blockfolio_export) {
         $positions = false;
@@ -137,6 +137,7 @@ add_action('init', function() {
         return $api->get_all_positions();
     });
 
+    $token_cache_key = substr($token, 0, 22);
 
     $header = ['coin', 'quantity', 'btc price', 'usd price', 'time', 'exchange'];
 
@@ -147,18 +148,18 @@ add_action('init', function() {
     $csv->insertOne($header);
 
     foreach ($positions->positionList as $position) {
-        $ticketPosition = remember(substr($token, 0, 20) . $position->base . '-' . $position->coin, function() use ($api, $position) {
+        $ticketPosition = remember($token_cache_key . $position->base . '-' . $position->coin, function() use ($api, $position) {
             return $api->get_positions_v2($position->base . '-' . $position->coin);
         });
 
         foreach ($ticketPosition->positionList as $event) {
-            if ($event->quantity > 0) {
+            if ($event->quantity !== 0) {
                 $csv->insertOne([
                     $position->coin,
                     $event->quantity,
-                    $event->price,
+                    $event->priceString,
                     $event->fiatPrice,
-                    $event->date,
+                    date('d-m-y H:m', $event->date / 1000),
                     $event->exchange
                 ]);
             }
