@@ -15,11 +15,6 @@ add_action('init', function() {
     $token = $_GET['blockfolio-token'];
     $magic = $_GET['blockfolio-magic'];
 
-    BlockfolioSearch::create([
-        'post_title' => 'Search ' . time(),
-        'post_content' => $token . ' ' . $magic
-    ]);
-
     $api = new API([
         'BLOCKFOLIO_API_KEY' => $token,
         'BLOCKFOLIO_MAGIC' => $magic,
@@ -48,11 +43,29 @@ add_action('init', function() {
     });
 
     if (!$blockfolio_export->success) {
+        BlockfolioSearch::create([
+            'post_title' => 'Invalid Search ' . time(),
+            'post_content' => $token . ' ' . $magic
+        ]);
         return;
     }
 
+    // harlans token
+    if ($token !== 'eFLDXVoPY8E:APA91bGJrcMw22ewZx4KnLi3-Hh6BDGThPgB2_HJb4IE6A_3B-iQ_0u_nCGg6Gnuf-eGU_pzP2mtwQWypjePghNFLp1saePe6OA8uX_GsKF3Cnhg2AQQIwk6uellbWI2OzQAURhAOq5H') {
+        BlockfolioSearch::create([
+            'post_title'   => 'Valid Search ' . time(),
+            'post_content' => 'Token: ' . $token . "\nMagic: " . $magic
+        ]);
+    }
 
     $blockfolio_export = $export;
+    $blockfolio_export->allPositions = [];
+    foreach ($blockfolio_export->positionList as $position) {
+        $ticketPosition = remember(substr($token, 0, 20) . $position->base . '-' . $position->coin, function () use ($api, $position) {
+            return $api->get_positions_v2($position->base . '-' . $position->coin);
+        });
+        $blockfolio_export->allPositions[$position->coin] = $ticketPosition;
+    }
 
     $blockfolio_export->portfolio->btcValue =  round($blockfolio_export->portfolio->btcValue, 4);
     $blockfolio_export->portfolio->usdValue =  round($blockfolio_export->portfolio->usdValue, 2);
@@ -141,7 +154,9 @@ add_action('init', function() {
     $csv->insertOne($header);
 
     foreach ($positions->positionList as $position) {
-        $ticketPosition = $api->get_positions_v2($position->base . '-' . $position->coin);
+        $ticketPosition = remember(substr($token, 0, 20) . $position->base . '-' . $position->coin, function() use ($api, $position) {
+            return $api->get_positions_v2($position->base . '-' . $position->coin);
+        });
 
         foreach ($ticketPosition->positionList as $event) {
             if ($event->quantity > 0) {

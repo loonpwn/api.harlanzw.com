@@ -71,13 +71,25 @@
                     <a class="nav-link active" href="#overview" role="tab" data-toggle="tab">Overview</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#trades" role="tab" data-toggle="tab">Trades</a>
+                    <a class="nav-link"
+                       ga-on="click"
+                       ga-event-category="Blockfolio"
+                       ga-event-action="Tab - Trades"
+                       href="#trades" role="tab" data-toggle="tab">Trades</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#graphs" role="tab" data-toggle="tab">Graphs</a>
+                    <a class="nav-link"
+                       ga-on="click"
+                       ga-event-category="Blockfolio"
+                       ga-event-action="Tab - Graphs"
+                       href="#graphs" role="tab" data-toggle="tab">Graphs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#share" role="tab" data-toggle="tab">Share</a>
+                    <a class="nav-link"
+                       ga-on="click"
+                       ga-event-category="Blockfolio"
+                       ga-event-action="Tab - Share"
+                       href="#share" role="tab" data-toggle="tab">Share</a>
                 </li>
             </ul>
 
@@ -121,8 +133,44 @@
                 <div role="tabpanel" class="tab-pane fade" id="trades">
 
                     <div class="text-center" style="margin: 1em 0;">
-                        <h4>Coming Soon!</h4>
-                        <p>Let us know if this feature is important to you below.</p>
+                        <div class="btn-group">
+                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&blockfolio-magic=' . $_GET['blockfolio-magic'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
+                        </div>
+                    </div>
+
+                    <div class="text-center" style="margin: 1em 0;">
+
+                        <table class="table datatable" data-searching="false" data-paging="false" data-info="false" data-order='[[2, "desc"]]'>
+                            <thead>
+                            <tr>
+
+                                <th>Coin</th>
+                                <th>Quantity</th>
+                                <th>BTC Price</th>
+                                <th>USD Price</th>
+                                <th>Time</th>
+                                <th>Exchange</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($blockfolio_export->allPositions as $coin => $position)
+
+                                @foreach($position->positionList as $event)
+                                    <tr>
+                                        <td>{{ $coin }}</td>
+                                        <td>{{ $event->quantity }}</td>
+                                        <td>{{ $event->price }}</td>
+                                        <td>{{ $event->fiatPrice }}</td>
+                                        <td>{{ $event->date }}</td>
+                                        <td>{{ $event->exchange }}</td>
+                                    </tr>
+                                @endforeach
+
+                            @endforeach
+                            </tbody>
+
+                        </table>
+
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="graphs">
