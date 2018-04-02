@@ -1,5 +1,5 @@
 <div class="jumbotron jumbotron-fluid mb-xl px-lg-md text-white lazyload call-to-action"
-     data-bg="{!! wp_get_attachment_image_src($background_image, 'full')[0] !!}">
+     data-bgset="{!! wp_get_attachment_image_srcset($background_image, 'full') !!}">
     <div class="justify-content-center call-to-action__container container ">
         @if(!empty($title))
             <h1 class="typography-display-3">{{ $title }}</h1>
