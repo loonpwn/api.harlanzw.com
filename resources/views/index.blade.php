@@ -18,11 +18,11 @@
                 {!! get_search_form(false) !!}
             @endif
             <div class="row">
+                @while (have_posts()) @php(the_post())
                 <div class="col-md-6">
-                    @while (have_posts()) @php(the_post())
                     @include('partials.content-'.get_post_type())
-                    @endwhile
                 </div>
+                @endwhile
             </div>
 
             {!! get_the_posts_navigation() !!}
