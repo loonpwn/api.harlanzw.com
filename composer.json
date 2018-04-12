@@ -92,7 +92,7 @@
     },
     "wordpress-install-dir": "web/wp",
     "hooks": {
-      "pre-commit": "./vendor/bin/phpcs --warning-severity=6",
+      "pre-commit": "./vendor/bin/phpcbf && ./vendor/bin/phpcs --warning-severity=6",
       "post-merge": ". \"env/build/deploy.sh\"",
       "commit-msg": ". \"env/tools/commit-msg\""
     }

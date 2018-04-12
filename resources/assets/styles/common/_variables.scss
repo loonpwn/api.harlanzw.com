@@ -27,5 +27,5 @@ $container-max-widths: (
 
 $link-color:            map-get($brand-colours, 'light-accent');
 $link-color-hover:      darken(map-get($brand-colours, 'light-accent'), 20%);
-$link-decoration:       none !default;
-$link-decoration-hover: underline !default;
+$link-decoration:       underline !default;
+$link-decoration-hover: none !default;

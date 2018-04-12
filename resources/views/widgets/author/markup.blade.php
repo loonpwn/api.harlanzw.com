@@ -1,10 +1,14 @@
-<section class="section">
-    <p class="text-center" style="margin-top: 2em;">
-        <span class="chip">
-                <a href="/about/">
-                <img alt="Author Harlan Wilton" class="chip-img lazyload" src="{{ \App\asset_path('images/harlan-wilton.jpg') }}">
-                Harlan Wilton
-                    </a>
-            </span>
-    </p>
-</section>
+<div class="container">
+    <section class="section author">
+        <a href="/about/" target="_blank" class="author__name">
+            <div class="author__image">
+                {!! wp_get_attachment_image(\App\get_option_page_value('author_image'), ['45', '45']) !!}
+            </div>
+            Harlan Wilton
+        </a>
+        <span class="author__read-time">
+        {{ get_page_reading_time() }}
+        </span>
+
+    </section>
+</div>

@@ -1,0 +1,24 @@
+.author {
+
+  @extend .clearfix;
+
+  a {
+    color: initial;
+  }
+
+  &__image {
+    margin-right: 1em;
+    float: left;
+    img {
+      border-radius: 50%;
+    }
+  }
+  &__name  {
+    display: block;
+    color: $black-secondary;
+  }
+  &__read-time {
+    color: $black-hint;
+    font-size: $font-size-caption;
+  }
+}

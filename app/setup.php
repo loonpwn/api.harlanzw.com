@@ -67,6 +67,7 @@ add_action('after_setup_theme', function () {
      */
     add_editor_style(asset_path('styles/main.css'));
 
+    remove_filter('the_content', 'wpautop');
 
 }, 20);
 

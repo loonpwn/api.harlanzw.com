@@ -93,3 +93,15 @@ function is_widget_cta_first($post = false) {
     }
     return false;
 }
+
+
+function get_page_reading_time($post_id = false) {
+    $average_wpm = 200;
+    $wyiswygs = get_widget_list($post_id);
+    $total_words = 0;
+    foreach ($wyiswygs as $wyiswyg) {
+        $total_words += str_word_count(strip_tags($wyiswyg->wysiwyg_content));
+    }
+    $m = floor($total_words / $average_wpm);
+    return $m . ' min read';
+}
