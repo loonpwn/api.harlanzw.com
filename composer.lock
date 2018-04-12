@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a9b6da97c68ef8f98f533ec44f42f3e",
+    "content-hash": "d111e1936f7ef460f87c08ea68457873",
     "packages": [
         {
             "name": "advanced-custom-fields/advanced-custom-fields-pro",
@@ -3748,15 +3748,15 @@
         },
         {
             "name": "wpackagist-plugin/query-monitor",
-            "version": "2.17.0",
+            "version": "3.0.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/query-monitor/",
-                "reference": "tags/2.17.0"
+                "reference": "trunk"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/query-monitor.2.17.0.zip",
+                "url": "https://downloads.wordpress.org/plugin/query-monitor.zip?timestamp=1523497805",
                 "reference": null,
                 "shasum": null
             },
