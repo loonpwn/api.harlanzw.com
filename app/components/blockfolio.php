@@ -93,9 +93,6 @@ add_action('init', function() {
 
     $token = $_GET['blockfolio-token'];
 
-    //888041861504-48bvq4p46f9n59bh2u3nm6q9ghckog27.apps.googleusercontent.com
-    //59oUwB1-qbgG9gGvS9tH-qXT
-
     BlockfolioSearch::create([
         'post_title' => 'Export Trades ' . time(),
         'post_content' => $token
@@ -144,10 +141,10 @@ add_action('init', function() {
             $event->quantity > 0 ? 'BUY' : 'SELL',
             $event->exchange,
             // base
-            $event->quantity,
+            abs($event->quantity),
             $event->coin,
             // quote
-            $event->price * $event->quantity,
+            $event->price * abs($event->quantity),
             $event->base,
             // no fees available
             '',
