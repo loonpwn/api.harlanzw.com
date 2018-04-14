@@ -10,10 +10,9 @@
 
 
         <?php
-        global $blockfolio_export;
         global $wp;
         ?>
-        @if(!empty($blockfolio_export) && !$blockfolio_export->success)
+        @if(!empty($export) && !$export->success)
 
             <div class="alert alert-danger">
                 <h3>Invalid Token/Magic Provided</h3>
@@ -22,7 +21,7 @@
             </div>
         @endif
 
-        @if(empty($blockfolio_export) || empty($blockfolio_export->portfolio))
+        @if(empty($export) || empty($export->portfolio))
 
             <form
                 ga-on="submit,change"
@@ -41,17 +40,6 @@
                     <small id="plugin-url-help" class="form-text text-muted">You can get this from the app by going to the Settings -> Token.</small>
                 </div>
 
-                {{--<div class="form-group">--}}
-                    {{--<label class="form-control-label" for="blockfolio-magic">Blockfolio Magic</label>--}}
-                    {{--<input--}}
-                        {{--ga-on="change"--}}
-                        {{--ga-event-category="Blockfolio"--}}
-                        {{--ga-event-action="Changed Magic"--}}
-                        {{--required--}}
-                        {{--type="text" class="form-control" name="blockfolio-magic" id="blockfolio-magic" aria-describedby="magic-help" placeholder="Enter Magic">--}}
-                    {{--<small id="magic-help" class="form-text text-muted">This requires packet sniffing to detect the magic of your account.</small>--}}
-                {{--</div>--}}
-
                 <input name="action" value="blockfolio-export" type="hidden">
 
                 <button type="submit" class="btn btn-primary">Export</button>
@@ -61,14 +49,18 @@
 
             <div class="text-center">
                 <h3>Portfolio Value</h3>
-                <p><i class="fab fa-btc" style="margin-right: 3px"></i><strong>{{ $blockfolio_export->portfolio->btcValue }}</strong> </p>
-                <p><i class="fab fa-ethereum" style="margin-right: 3px"></i><strong>{{ $blockfolio_export->portfolio->ethValue }}</strong> </p>
-                <p><i class="fas fa-dollar-sign" style="margin-right: 3px"></i><strong>{{ $blockfolio_export->portfolio->usdValue }}</strong> </p>
+                <p><i class="fab fa-btc" style="margin-right: 3px"></i><strong>{{ $export->portfolio->btcValue }}</strong> </p>
+                <p><i class="fab fa-ethereum" style="margin-right: 3px"></i><strong>{{ $export->portfolio->ethValue }}</strong> </p>
+                <p><i class="fas fa-dollar-sign" style="margin-right: 3px"></i><strong>{{ $export->portfolio->usdValue }}</strong> </p>
             </div>
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#overview" role="tab" data-toggle="tab">Overview</a>
+                    <a
+                        ga-on="click"
+                        ga-event-category="Blockfolio"
+                        ga-event-action="Tab - Overview"
+                        class="nav-link active" href="#overview" role="tab" data-toggle="tab">Overview</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
@@ -76,6 +68,13 @@
                        ga-event-category="Blockfolio"
                        ga-event-action="Tab - Trades"
                        href="#trades" role="tab" data-toggle="tab">Trades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       ga-on="click"
+                       ga-event-category="Blockfolio"
+                       ga-event-action="Tab - Watching"
+                       href="#watching" role="tab" data-toggle="tab">Watching</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
@@ -100,7 +99,7 @@
 
                     <div class="text-center" style="margin: 1em 0;">
                         <div class="btn-group">
-                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
+                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&action=blockfolio-portfolio-export' }}" class="btn btn-primary">Export Portfolio CSV</a>
                         </div>
                     </div>
 
@@ -114,7 +113,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($blockfolio_export->positionList as $coin)
+                        @foreach($export->positionList as $coin)
                             <tr>
                                 <td><img src="{!! $coin->coinUrlDark !!}" height="40"> {{ $coin->fullName }} </td>
                                 <td>{{ $coin->quantity }}</td>
@@ -134,7 +133,7 @@
 
                     <div class="text-center" style="margin: 1em 0;">
                         <div class="btn-group">
-                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&action=blockfolio-export-csv' }}" class="btn btn-primary">Export Trades CSV</a>
+                            <a target="_blank" href="{{ home_url($wp->request) . '/?blockfolio-token=' . $_GET['blockfolio-token'] . '&action=blockfolio-trade-export' }}" class="btn btn-primary">Export Trades CSV</a>
                         </div>
                     </div>
 
@@ -153,17 +152,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($blockfolio_export->allPositions as $coin => $position)
+                            @foreach($export->allPositions as $coin => $position)
 
                                 @foreach($position->positionList as $event)
-                                    <tr>
-                                        <td>{{ $coin }}</td>
-                                        <td>{{ $event->quantity }}</td>
-                                        <td>{{ $event->priceString }}</td>
-                                        <td>{{ $event->priceFiatString }}</td>
-                                        <td>{{ date('d-m-y H:m', $event->date / 1000) }}</td>
-                                        <td>{{ $event->exchange }}</td>
-                                    </tr>
+                                    @if($event->quantity > 0)
+                                        <tr>
+                                            <td>{{ $coin }}</td>
+                                            <td>{{ $event->quantity }}</td>
+                                            <td>{{ $event->priceString }}</td>
+                                            <td>{{ $event->priceFiatString }}</td>
+                                            <td>{{ date('d-m-y H:m', $event->date / 1000) }}</td>
+                                            <td>{{ $event->exchange }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
 
                             @endforeach
@@ -172,6 +173,33 @@
                         </table>
 
                     </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="watching">
+
+                    <table class="table datatable" data-searching="false" data-paging="false" data-info="false" data-order='[[2, "desc"]]'>
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                            <th>Coin Market Cap Rank</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($export->watching as $coin)
+                            <tr>
+                                <td><img src="{!! $coin->coinUrlDark !!}" height="40"> {{ $coin->fullName }} </td>
+                                <td><i class="fab fa-btc" style="margin-right: 3px"></i>{{ $coin->lastPriceString }}</td>
+                                <td>
+                                    <a href="https://coinmarketcap.com/currencies/{{ $coin->cmc_token_id }}" target="_blank">
+                                        <strong>{{ $coin->rank }}</strong>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+
+                    </table>
+
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="graphs">
 

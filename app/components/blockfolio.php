@@ -2,168 +2,164 @@
 namespace App;
 
 use App\models\BlockfolioSearch;
+use App\services\BlockfolioService;
 use Blockfolio\API;
+use Google_Service_Sheets;
 use Illuminate\Support\Str;
 use League\Csv\Writer;
 
-add_action('init', function() {
+add_action('sage/template/export-blockfolio/data', function($data) {
 
     if (empty($_GET['action']) || $_GET['action'] !== 'blockfolio-export') {
-        return;
+        return $data;
     }
 
     $token = $_GET['blockfolio-token'];
 
-    $api = new API([
-        'BLOCKFOLIO_API_KEY' => $token,
-    ]);
+    $service = new BlockfolioService($token);
 
-    global $blockfolio_export;
+    $export = $service->get_all_meta();
 
-    $blockfolio_export = new \stdClass();
 
-    $blockfolio_export->errorMessage = false;
-    $blockfolio_export->success = true;
-
-    $token_cache_key = substr($token, 0, 22);
-
-    $export = remember($token_cache_key, function() use ($api, $blockfolio_export) {
-        $positions = false;
-        try {
-            $positions = $api->get_all_positions();
-        } catch (\Exception $e) {
-            if (Str::contains($e->getMessage(), '401')) {
-                $blockfolio_export->error_message = 'Invalid Token';
-                $blockfolio_export->success = false;
-            }
-            // invalid
-        }
-        return $positions;
-    });
-
-    if (!$blockfolio_export->success) {
+    if (empty($export)) {
+        $export = new \stdClass();
+        $export->error_message = 'Invalid Token';
+        $export->success = false;
         BlockfolioSearch::create([
             'post_title' => 'Invalid Search: ' . $token,
         ]);
-        return;
+    } else {
+        BlockfolioSearch::create([
+            'post_title' => 'Valid Search: ' . $token,
+        ]);
     }
-
-    // harlans token
-    BlockfolioSearch::create([
-        'post_title' => 'Valid Search: ' . $token,
-    ]);
-
-    $blockfolio_export = $export;
-    $blockfolio_export->allPositions = [];
-    foreach ($blockfolio_export->positionList as $position) {
-        $ticketPosition = remember($token_cache_key . $position->base . '-' . $position->coin, function () use ($api, $position) {
-            return $api->get_positions_v2($position->base . '-' . $position->coin);
-        });
-        $blockfolio_export->allPositions[$position->coin] = $ticketPosition;
-    }
-
-    $blockfolio_export->portfolio->btcValue =  round($blockfolio_export->portfolio->btcValue, 4);
-    $blockfolio_export->portfolio->usdValue =  round($blockfolio_export->portfolio->usdValue, 2);
-    $blockfolio_export->portfolio->ethValue =  round($blockfolio_export->portfolio->ethValue, 4);
-
-    $blockfolio_export->positionList = collect($blockfolio_export->positionList)
-        ->filter(function($coin) {
-            return $coin->quantity > 0;
-        })
-        ->sort(function($a, $b) {
-            return ceil($a->holdingValueBtc - $b->holdingValueBtc);
-        })
-        ->map(function($coin) {
-            $token_id =  str_replace(' ', '-', strtolower($coin->fullName));
-
-            switch ($token_id) {
-                case 'stellar-lumens':
-                    $token_id = 'stellar';
-                    break;
-                case 'int':
-                    $token_id = 'internet-node-token';
-                    break;
-                case 'agi':
-                    $token_id = 'singularitynet';
-                    break;
-                case 'polymath':
-                    $token_id = 'polymath-network';
-                    break;
-            }
-            $coin->cmc_token_id = $token_id;
-            $cmc = remember('cmc- ' . $token_id, function() use ($token_id) {
-                try {
-                    return file_get_contents('https://api.coinmarketcap.com/v1/ticker/' . $token_id);
-                } catch (\Exception $e) {
-                    return false;
-                }
-                // cache cmc for 24 hours
-            }, 60 * 60 * 24);
-            if (empty($cmc)) {
-                $coin->rank = 'n/a';
-                return $coin;
-            }
-
-            $cmc = json_decode($cmc);
-
-            $coin->rank = $cmc[0]->rank;
-
-            $coin->holdingValueBtc = round($coin->holdingValueBtc, 4);
-
-            return $coin;
-        })
-        ->toArray();
-
+    $data['export'] = $export;
+    return $data;
 });
+
 
 add_action('init', function() {
 
-    if (empty($_GET['action']) || $_GET['action'] !== 'blockfolio-export-csv') {
+    if (empty($_GET['action']) || $_GET['action'] !== 'blockfolio-portfolio-export') {
         return;
     }
 
     $token = $_GET['blockfolio-token'];
 
+
     BlockfolioSearch::create([
-        'post_title' => 'Export ' . time(),
+        'post_title' => 'Export Portfolio ' . time(),
         'post_content' => $token
     ]);
 
-    $api = new API([
-        'BLOCKFOLIO_API_KEY' => $token,
-    ]);
+    $service = new BlockfolioService($token);
 
-    $positions = remember(substr($token, 0, 20), function() use ($api) {
-        return $api->get_all_positions();
-    });
+    $export = $service->get_all_meta();
 
-    $token_cache_key = substr($token, 0, 22);
-
-    $header = ['coin', 'quantity', 'btc price', 'usd price', 'time', 'exchange'];
-
-//load the CSV document from a string
+    //load the CSV document from a string
     $csv = Writer::createFromString('');
 
-////insert the header
+    $header = [
+        'Coin',
+        'Holdings',
+        'Value Eth',
+        'Value BTC',
+        'Value Fiat',
+    ];
+
     $csv->insertOne($header);
 
-    foreach ($positions->positionList as $position) {
-        $ticketPosition = remember($token_cache_key . $position->base . '-' . $position->coin, function() use ($api, $position) {
-            return $api->get_positions_v2($position->base . '-' . $position->coin);
-        });
+    foreach ($export->positionList as $coin) {
+        $csv->insertOne([
+            $coin->coin,
+            $coin->quantity,
+            $coin->holdingValueEth,
+            $coin->holdingValueBtc,
+            $coin->holdingValueFiat,
+        ]);
+    }
 
-        foreach ($ticketPosition->positionList as $event) {
-            if ($event->quantity !== 0) {
-                $csv->insertOne([
-                    $position->coin,
-                    $event->quantity,
-                    $event->priceString,
-                    $event->fiatPrice,
-                    date('d-m-y H:m', $event->date / 1000),
-                    $event->exchange
-                ]);
-            }
-        }
+    $csv->output('Blockfolio-Export.csv');
+    die;
+});
+
+
+
+add_action('init', function() {
+
+    if (empty($_GET['action']) || $_GET['action'] !== 'blockfolio-trade-export') {
+        return;
+    }
+
+    $token = $_GET['blockfolio-token'];
+
+    //888041861504-48bvq4p46f9n59bh2u3nm6q9ghckog27.apps.googleusercontent.com
+    //59oUwB1-qbgG9gGvS9tH-qXT
+
+    BlockfolioSearch::create([
+        'post_title' => 'Export Trades ' . time(),
+        'post_content' => $token
+    ]);
+
+    $service = new BlockfolioService($token);
+
+    $export = $service->get_all_meta();
+    $positions = collect($export->allPositions)->map(function($position) {
+        return $position->positionList;
+    })
+                                               ->flatten()
+                                               ->filter(function($position) {
+                                                   return $position->quantity != 0;
+                                               })
+                                               ->sort(function($a, $b) {
+                                                   return $b->date - $a->date;
+                                               })
+                                               ->toArray();
+
+    //load the CSV document from a string
+    $csv = Writer::createFromString('');
+
+    $header = [
+        'Date',
+        'Type',
+        'Exchange',
+        'Base amount',
+        'Base currency',
+        'Quote amount',
+        'Quote currency',
+        'Fee',
+        'Fee currency',
+        'Costs/Proceeds',
+        'Costs/Proceeds currency',
+        'Sent/Received from',
+        'Sent to',
+        'Notes'
+    ];
+
+    $csv->insertOne($header);
+
+    foreach ($positions as $event) {
+        $csv->insertOne([
+            date('Y-m-d H:m:s', $event->date / 1000),
+            $event->quantity > 0 ? 'BUY' : 'SELL',
+            $event->exchange,
+            // base
+            $event->quantity,
+            $event->coin,
+            // quote
+            $event->price * $event->quantity,
+            $event->base,
+            // no fees available
+            '',
+            '',
+            // ico related
+            '',
+            '',
+            // transfers send to /from
+            '',
+            '',
+            $event->note
+        ]);
     }
 
     $csv->output('Blockfolio-Export.csv');
