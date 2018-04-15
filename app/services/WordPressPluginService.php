@@ -114,7 +114,7 @@ class WordPressPluginService {
         $rank = -1;
         foreach ($contents->plugins as $index => $plugin) {
             if ($plugin === $call_api->slug) {
-                $rank = $index;
+                $rank = $index + 1;
                 break;
             }
         }
