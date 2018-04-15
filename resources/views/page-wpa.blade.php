@@ -135,7 +135,7 @@
                                     </div>
                                     <div class="card-body">
                                         <p class="rank">Rank {{ $term['rank']['rank'] }}</p>
-                                        <ul class="list-unstyled">
+                                        <ul class="list-unstyled font-weight-light">
                                             @foreach($term['recommendations'] as $recommendation)
                                                 <li>{{ $recommendation }}</li>
                                             @endforeach
