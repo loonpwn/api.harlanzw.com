@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 class BlockfolioService {
 
     private $token;
-    private $api;
+    public $api;
 
     /**
      * BlockfolioService constructor.

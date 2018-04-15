@@ -55,8 +55,7 @@
         "\\.(coffee|scss|css|less|hbs|svg|json)$"
       ]
     },
-    "rules": {
-    }
+    "rules": {}
   },
   "stylelint": {
     "extends": "stylelint-config-standard",

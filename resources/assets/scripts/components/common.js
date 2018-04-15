@@ -7,7 +7,9 @@ export default {
             hljs.highlightBlock(block);
         });
 
-        $('.select2').select2();
+        $('.select2').each(function() {
+            $(this).select2($(this).data());
+        });
 
         $('.datatable').DataTable();
     },
