@@ -1,6 +1,7 @@
 <?php
 namespace App\services;
 
+use App\models\WPASearch;
 use function App\remember;
 use Illuminate\Support\Str;
 use WP_Error;
@@ -20,6 +21,11 @@ class WordPressPluginService {
 
     public function get_plugin_meta() {
         return remember('wpa-' . $this->slug, function() {
+
+            WPASearch::create([
+                'post_title' => 'Search: ' . $this->slug
+            ]);
+
             require ABSPATH . '/wp-admin/includes/plugin-install.php';
 
             /** Prepare our query */
