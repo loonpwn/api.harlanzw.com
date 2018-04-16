@@ -111,7 +111,9 @@ add_action('init', function() {
                                                ->sort(function($a, $b) {
                                                    return $b->date - $a->date;
                                                })
+                                               ->values()
                                                ->toArray();
+
 
     //load the CSV document from a string
     $csv = Writer::createFromString('');
@@ -128,6 +130,7 @@ add_action('init', function() {
         'Fee currency',
         'Costs/Proceeds',
         'Costs/Proceeds currency',
+        'Sync Holdings',
         'Sent/Received from',
         'Sent to',
         'Notes'
@@ -135,16 +138,29 @@ add_action('init', function() {
 
     $csv->insertOne($header);
 
-    foreach ($positions as $event) {
-        $csv->insertOne([
-            date('Y-m-d H:m:s', $event->date / 1000),
+    $sync = false;
+
+    foreach ($positions as $index => $event) {
+        // if the note starts with Sell For it was a deduction for the next payment
+        if (starts_with($event->note, 'Sell for') || starts_with($event->note, 'Buy from')) {
+            $sync = $event;
+            continue;
+        }
+
+        $row = [
+            // date
+            date('Y-m-d H:m:s', $event->date / 1000) . ' +00:00',
+            // type
             $event->quantity > 0 ? 'BUY' : 'SELL',
+            // exchange
             $event->exchange,
             // base
             abs($event->quantity),
+            // coin
             $event->coin,
             // quote
             $event->price * abs($event->quantity),
+            // base
             $event->base,
             // no fees available
             '',
@@ -152,11 +168,22 @@ add_action('init', function() {
             // ico related
             '',
             '',
-            // transfers send to /from
-            '',
-            '',
-            $event->note
-        ]);
+        ];
+
+        // sync holdings
+        if ($sync) {
+            $row[] = '1';
+            $sync = false;
+        } else {
+            $row[] = '';
+        }
+        // transfers send to /from
+        $row[] = '';
+        $row[] = '';
+        // notes
+        $row[] = $event->note;
+
+        $csv->insertOne($row);
     }
 
     $csv->output('Blockfolio-Export.csv');
