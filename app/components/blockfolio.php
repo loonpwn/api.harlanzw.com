@@ -138,18 +138,26 @@ add_action('init', function() {
 
     $csv->insertOne($header);
 
-    $sync = false;
+//    $sync = false;
+//    $syncNote = '';
+
 
     foreach ($positions as $index => $event) {
         // if the note starts with Sell For it was a deduction for the next payment
-        if (starts_with($event->note, 'Sell for') || starts_with($event->note, 'Buy from')) {
-            $sync = $event;
-            continue;
-        }
+//        if (starts_with($event->note, 'Sell for') || starts_with($event->note, 'Buy from')) {
+//            $sync = $event;
+//            $syncNote = $event->note;
+//            continue;
+//        }
+        $event->date = substr($event->date, 0, -3);
+
+        $dt = new \DateTime();
+        $dt->setTimestamp($event->date);
 
         $row = [
             // date
-            date('Y-m-d H:m:s', $event->date / 1000) . ' +00:00',
+//            $event->date,
+            $dt->format('Y-m-d H:m:s') . ' +00:00',
             // type
             $event->quantity > 0 ? 'BUY' : 'SELL',
             // exchange
@@ -157,7 +165,7 @@ add_action('init', function() {
             // base
             abs($event->quantity),
             // coin
-            $event->coin,
+            $event->displayedTokenSymbol,
             // quote
             $event->price * abs($event->quantity),
             // base
@@ -171,17 +179,19 @@ add_action('init', function() {
         ];
 
         // sync holdings
-        if ($sync) {
-            $row[] = '1';
-            $sync = false;
-        } else {
+//        if ($sync) {
+//            $row[] = '';
+//            $sync = false;
+//        } else {
             $row[] = '';
-        }
+//        }
         // transfers send to /from
         $row[] = '';
         $row[] = '';
         // notes
+//        $row[] = !empty($event->note) ? $event->note : $syncNote;
         $row[] = $event->note;
+        // $syncNote = '';
 
         $csv->insertOne($row);
     }

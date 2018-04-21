@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 
 class BlockfolioService {
 
+    const CACHE_TIME = 5 * 60;
+
     private $token;
     public $api;
 
@@ -41,7 +43,7 @@ class BlockfolioService {
                 // invalid
             }
             return $positions;
-        });
+        }, self::CACHE_TIME);
 
         // failed
         if (empty($export)) {
@@ -53,7 +55,7 @@ class BlockfolioService {
         foreach ($export->positionList as $position) {
             $ticketPosition = \App\remember($this->get_position_cache_key($position), function () use ($service, $position) {
                 return $service->api->get_positions_v2($position->base . '-' . $position->coin);
-            });
+            }, self::CACHE_TIME);
             $export->allPositions[$position->coin] = $ticketPosition;
 
             if ($position->watchOnly) {
@@ -112,7 +114,7 @@ class BlockfolioService {
             // cache cmc for 24 hours
         }, 60 * 60 * 24);
         if (empty($cmc)) {
-            $coin->rank = 'n/a';
+            $coin->rank = '(lookup failed)';
             return $coin;
         }
 
