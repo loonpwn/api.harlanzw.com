@@ -2,7 +2,6 @@
 namespace App\services;
 
 use App\models\WPASearch;
-use function App\remember;
 use Illuminate\Support\Str;
 use WP_Error;
 
@@ -20,54 +19,50 @@ class WordPressPluginService {
     }
 
     public function get_plugin_meta() {
-        return remember('wpa-' . $this->slug, function() {
+        WPASearch::create([
+            'post_title' => 'Search: ' . $this->slug
+        ]);
 
-            WPASearch::create([
-                'post_title' => 'Search: ' . $this->slug
-            ]);
+        require ABSPATH . '/wp-admin/includes/plugin-install.php';
 
-            require ABSPATH . '/wp-admin/includes/plugin-install.php';
+        /** Prepare our query */
+        $call_api = plugins_api('plugin_information', array('slug' => $this->slug, 'fields' => [
+            'description' => true,
+            'reviews' => true,
+            'banners' => true,
+            'icons' => true,
+            'active_installs' => true,
+            'group' => true,
+            'contributors' => true,
+        ]));
 
-            /** Prepare our query */
-            $call_api = plugins_api('plugin_information', array('slug' => $this->slug, 'fields' => [
-                'description' => true,
-                'reviews' => true,
-                'banners' => true,
-                'icons' => true,
-                'active_installs' => true,
-                'group' => true,
-                'contributors' => true,
-            ]));
-
-            if ($call_api instanceof WP_Error) {
-                return false;
-            }
+        if ($call_api instanceof WP_Error) {
+            return false;
+        }
 
 //        $installs = json_decode(file_get_contents('https://api.wordpress.org/stats/plugin/1.0/downloads.php?slug=' . $this->slug . '&historical_summary=13'))->all_time;
-            $readme_file = [
-                'readme.txt',
-                'README.txt',
-                'README.MD'
-            ];
+        $readme_file = [
+            'readme.txt',
+            'README.txt',
+            'README.MD'
+        ];
 
-            foreach ($readme_file as $file) {
-                $url = 'https://plugins.svn.wordpress.org/' . $this->slug . '/trunk/' . $file;
-                if (@file_get_contents($url)) {
-                    $readme = new \App\Helpers\ReadmeParser($url);
-                    break;
-                }
+        foreach ($readme_file as $file) {
+            $url = 'https://plugins.svn.wordpress.org/' . $this->slug . '/trunk/' . $file;
+            if (@file_get_contents($url)) {
+                $readme = new \App\Helpers\ReadmeParser($url);
+                break;
             }
+        }
 
-            if (empty($readme)) {
-                return;
-            }
-
-
-            $call_api->excerpt = $readme->short_description;
-            // Print the entire match result
-            $call_api->description = $call_api->sections['description'];
+        if (empty($readme)) {
             return $call_api;
-        }, 60 * 30);
+        }
+
+        $call_api->excerpt = $readme->short_description;
+        // Print the entire match result
+        $call_api->description = $call_api->sections['description'];
+        return $call_api;
     }
 
     protected function tokenize($string) {
@@ -105,15 +100,12 @@ class WordPressPluginService {
 
     public function get_search_term_rank($call_api, $search_term) {
 
-        $contents = remember('wpa-' . $call_api->slug . '-' . $search_term, function() use ($search_term) {
-            return file_get_contents(self::QUERY_PLUGIN_ENDPOINT . '?' . http_build_query(
-                [
-                        's' => $search_term,
-                        'posts_per_page' => 100
-                    ]
-            ));
-        }, 60 * 120);
-
+        $contents = file_get_contents(self::QUERY_PLUGIN_ENDPOINT . '?' . http_build_query(
+            [
+                    's' => $search_term,
+                    'posts_per_page' => 100
+                ]
+        ));
 
         $contents = json_decode($contents);
 

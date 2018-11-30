@@ -1,19 +1,20 @@
 version: '2'
 
+networks:
+    proxy:
+        external: true
+    backend:
+        driver: 'bridge'
+
 services:
 
    harlanzw:
-    network_mode: "bridge"
     container_name: harlanzw
     # Uncomment the below if you need to rebuild the container
     build: ./env/docker/
     restart: always
 #    image: 4mation/wordpress:v5.3
     domainname: local.harlanzw.com
-    links:
-      - hzw_db
-    external_links:
-      - proxy
     environment:
       - DB_NAME=hzw
       - DB_USER=root
@@ -21,18 +22,18 @@ services:
       - DB_HOST=hzw_db
       - VIRTUAL_HOST=local.harlanzw.com
       - HTTPS_METHOD=noredirect
-
     extra_hosts:
       - "local.harlanzw.com:127.0.0.1"
 #    This IP is not always correct, it's just what was the host-machine IP at the time
       - "host-machine:172.17.0.1"
-
     volumes:
          - .:/home/wp/code
          - /home/harlan/.ssh:/home/wp/.ssh
+    networks:
+        - backend
+        - proxy
 
    hzw_db:
-    network_mode: "bridge"
     container_name: hzw_db
     image: mariadb
     restart: always
@@ -43,3 +44,5 @@ services:
       - "3311:3306"
     volumes:
       - ./env/database:/var/lib/mysql
+    networks:
+        - backend

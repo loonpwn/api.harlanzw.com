@@ -20,6 +20,11 @@ return [
 			'root' => wp_upload_dir()['basedir'],
 		],
 
+        'runtime' => [
+            'driver' => 'local',
+            'root' => ROOT_DIR . '/runtime'
+        ]
+
 	],
 
 ];
