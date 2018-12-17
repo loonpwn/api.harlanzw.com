@@ -6,10 +6,10 @@ use App\services\BlockfolioService;
 use League\Csv\Writer;
 
 register_rest_route('blockfolio/v1', '/submission', [
-    'methods' => 'POST',
+    'methods' => 'GET',
     'callback' => function(WP_REST_Request $request) {
 
-        $token = $request->get_body_params()['token'];
+        $token = $_GET['blockfolio-token'];
 
         $service = new BlockfolioService($token);
 
