@@ -12,7 +12,6 @@ app()->singleton('cache', function() {
 	$container = new Container();
 	$config = ['cache' => config('cache')];
 	$container['config'] = nested_array_to_dot_syntax($config, 3);
-
 	$cacheManager = new CacheManager($container);
 
 	/** If we want file based caching */
@@ -35,4 +34,14 @@ app()->singleton('cache', function() {
 function cache() {
 	/** @var CacheManager $cache_manager */
 	return app('cache')->store();
+}
+
+
+function remember($key, $function, $minutes) {
+    if (cache()->has($key)) {
+        return cache()->get($key);
+    }
+    $value = $function();
+    cache()->put($key, $value, $minutes);
+    return $value;
 }

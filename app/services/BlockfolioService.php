@@ -32,30 +32,25 @@ class BlockfolioService {
 
     public function get_all_meta() {
         $service = $this;
-        $export = \App\remember($this->token, function() use ($service) {
-            $positions = false;
-            try {
-                $positions = $service->api->get_all_positions();
-            } catch (\Exception $e) {
-                if (Str::contains($e->getMessage(), '401')) {
-                    return false;
-                }
-                // invalid
+
+        $export = false;
+        try {
+            $export = $service->api->get_all_positions();
+        } catch (\Exception $e) {
+            if (Str::contains($e->getMessage(), '401')) {
+                return false;
             }
-            return $positions;
-        }, self::CACHE_TIME);
+        }
 
         // failed
-        if (empty($export)) {
+        if (empty($export) || empty($export->positionList)) {
             return false;
         }
 
         $export->allPositions = [];
         $export->watching = [];
         foreach ($export->positionList as $position) {
-            $ticketPosition = \App\remember($this->get_position_cache_key($position), function () use ($service, $position) {
-                return $service->api->get_positions_v2($position->base . '-' . $position->coin);
-            }, self::CACHE_TIME);
+            $ticketPosition = $service->api->get_positions_v2($position->base . '-' . $position->coin);
             $export->allPositions[$position->coin] = $ticketPosition;
 
             if ($position->watchOnly) {
@@ -112,7 +107,7 @@ class BlockfolioService {
                 return false;
             }
             // cache cmc for 24 hours
-        }, 60 * 60 * 24);
+        }, 60 * 24);
         if (empty($cmc)) {
             $coin->rank = '(lookup failed)';
             return $coin;
