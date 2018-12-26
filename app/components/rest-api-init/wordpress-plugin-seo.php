@@ -7,6 +7,11 @@ register_rest_route('wp-seo/v1', '/submission', [
 
         $plugin = $request->get_body_params()['plugin_url'];
 
+        // try get the slg from the full url
+        if (str_contains($plugin, 'https://wordpress.org/plugins')) {
+            $plugin = str_replace(['https://wordpress.org/plugins/', '/'], '', $plugin);
+        }
+
         $service = new \App\services\WordPressPluginService($plugin);
 
         $meta = $service->get_plugin_meta();
