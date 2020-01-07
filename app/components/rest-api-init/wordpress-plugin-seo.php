@@ -19,7 +19,7 @@ register_rest_route('wp-seo/v1', '/meta', [
 
         $meta->seo = $seo;
 
-        wp_mail('harlan@harlanzw.com', 'New Meta: ' . $plugin, '', '');
+        wp_mail('harlan@harlanzw.com', 'WPA New Plugin: ' . $plugin, print_r($meta, true));
 
         $response = new WP_REST_Response();
         $response->set_data($meta);
@@ -48,7 +48,7 @@ register_rest_route('wp-seo/v1', '/keyword', [
         $data = $service->get_search_term_score($keyword);
 
 
-        wp_mail('harlan@harlanzw.com', 'New WPA: ' . $plugin, '', '');
+        wp_mail('harlan@harlanzw.com', 'WPA New Keyword: ' . $plugin . ' - ' . $keyword, print_r($data, true));
 
         $response = new WP_REST_Response();
         $response->set_data($data);
