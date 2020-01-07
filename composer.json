@@ -49,6 +49,7 @@
     "illuminate/cache": "^5.5",
     "illuminate/config": "^5.5.2",
     "illuminate/view": "^5.5.2",
+    "ivopetkov/html5-dom-document-php": "2.*",
     "johnpbloch/wordpress": "^4.9.1",
     "league/csv": "^9.1",
     "league/flysystem": "^1.0",

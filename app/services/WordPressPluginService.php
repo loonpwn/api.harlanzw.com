@@ -3,11 +3,15 @@ namespace App\services;
 
 use App\models\WPASearch;
 use Illuminate\Support\Str;
+use IvoPetkov\HTML5DOMDocument;
+use IvoPetkov\HTML5DOMElement;
 use WP_Error;
 
 class WordPressPluginService {
 
     public $slug;
+    public $seo;
+    public $meta;
 
     const QUERY_PLUGIN_ENDPOINT = 'https://wordpress.org/plugins/wp-json/plugins/v1/query-plugins/';
 
@@ -18,6 +22,12 @@ class WordPressPluginService {
         $this->slug = $slug;
     }
 
+    public function get_seo() {
+        $seo = (new \App\services\Seo())->analyze('https://wordpress.org/plugins/' . $this->slug . '/');
+        $this->seo = $seo;
+        return $seo;
+    }
+
     public function get_plugin_meta() {
         WPASearch::create([
             'post_title' => 'Search: ' . $this->slug
@@ -26,7 +36,7 @@ class WordPressPluginService {
         require ABSPATH . '/wp-admin/includes/plugin-install.php';
 
         /** Prepare our query */
-        $call_api = plugins_api('plugin_information', array('slug' => $this->slug, 'fields' => [
+        $this->meta = plugins_api('plugin_information', array('slug' => $this->slug, 'fields' => [
             'description' => true,
             'reviews' => true,
             'banners' => true,
@@ -36,7 +46,7 @@ class WordPressPluginService {
             'contributors' => true,
         ]));
 
-        if ($call_api instanceof WP_Error) {
+        if ($this->meta instanceof WP_Error) {
             return false;
         }
 
@@ -56,13 +66,13 @@ class WordPressPluginService {
         }
 
         if (empty($readme)) {
-            return $call_api;
+            return $this->meta;
         }
 
-        $call_api->excerpt = $readme->short_description;
+        $this->meta->excerpt = $readme->short_description;
         // Print the entire match result
-        $call_api->description = $call_api->sections['description'];
-        return $call_api;
+        $this->meta->description = $this->meta->sections['description'];
+        return $this->meta;
     }
 
     protected function tokenize($string) {
@@ -76,21 +86,20 @@ class WordPressPluginService {
         return $words;
     }
 
-    public function get_plugin_recommendations($call_api) {
+    public function get_plugin_recommendations() {
 
-        $recommendations = [];
 
         $recommendations[] = 'Always try to improve your active installs. These will scale up all search terms the most.';
 
-        $five_star_rating = ($call_api->rating / 20);
+        $five_star_rating = ($this->meta->rating / 20);
         if ($five_star_rating != 5) {
             $recommendations[] = 'Higher ratings will scale results accordingly. Currently: ' . $five_star_rating;
         }
 
-        if ($call_api->support_threads_resolved > 0) {
-            $resolved_percentage = round($call_api->support_threads_resolved / $call_api->support_threads, 2) * 100;
+        if ($this->meta->support_threads_resolved > 0) {
+            $resolved_percentage = round($this->meta->support_threads_resolved / $this->meta->support_threads, 2) * 100;
             if ($resolved_percentage <= 75) {
-                $recommendations[] = 'Increase support threads resolved. These will scale rankings. Currently: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved: ' . $resolved_percentage . '%';
+                $recommendations[] = 'Increase support threads resolved. These will scale rankings. Currently: ' . $this->meta->support_threads_resolved . '/' . $this->meta->support_threads . '  Resolved: ' . $resolved_percentage . '%';
             }
         } else {
             $recommendations[] = 'Have at least one resolved support thread';
@@ -98,52 +107,61 @@ class WordPressPluginService {
         return $recommendations;
     }
 
-    public function get_search_term_rank($call_api, $search_term) {
+    public function get_search_term_rank($search_term) {
+        $rank = null;
 
-        $contents = file_get_contents(self::QUERY_PLUGIN_ENDPOINT . '?' . http_build_query(
-            [
-                    's' => $search_term,
-                    'posts_per_page' => 100
-                ]
-        ));
+        for ($page = 1; $page <= 5; $page++) {
+            $html = file_get_contents('https://wordpress.org/plugins/search/' . Str::slug($search_term) . '/page/' . $page);
 
-        $contents = json_decode($contents);
+            $dom = new HTML5DOMDocument();
+            $dom->loadHTML($html, HTML5DOMDocument::ALLOW_DUPLICATE_IDS);
 
-        $rank = -1;
-        foreach ($contents->plugins as $index => $plugin) {
-            if ($plugin === $call_api->slug) {
-                $rank = $index + 1;
+            $elements = $dom->querySelectorAll('.plugin-card');
+
+            /** @var HTML5DOMElement $childNode */
+            $i = 0;
+            foreach ($elements as $childNode) {
+                $i++;
+                if ($childNode->classList->contains($this->seo['id'])) {
+                    $rank = $i;
+                    break;
+                }
+            }
+
+            $pageNumbers = $dom->querySelectorAll('.page-numbers');
+
+            if ($pageNumbers->length <= 0) {
+                $total = $elements->length;
+                break;
+            }
+
+            $total = $pageNumbers->item($pageNumbers->length - 2)->innerHTML * 20;
+            if (is_int($rank)) {
                 break;
             }
         }
 
-        if ($rank === -1) {
-            $rank = 'Not Found';
-        }
-
         return [
-            'total' => $contents->info->results,
-            'rank' => $rank
+            'total' => $total,
+            'rank' => $rank ?? 'Not Found'
         ];
     }
 
-    public function get_search_term_score($call_api, $search_term) {
-
-        $call_api = clone $call_api;
+    public function get_search_term_score($search_term) {
 
         $log = '';
         $total_points = 0;
 
-        $title = $call_api->name;
-        $slug = $call_api->slug;
-        $sections = $call_api->sections;
+        $title = $this->meta->name;
+        $slug = $this->meta->slug;
+        $sections = $this->meta->sections;
         $sections_html = collect($sections)->implode('\n');
-        $call_api->plugin_tags = collect($call_api->tags)->implode(' ');
-        $call_api->all_content = implode('\n', [$title, $slug, $sections_html]);
+        $this->meta->plugin_tags = collect($this->meta->tags)->implode(' ');
+        $this->meta->all_content = implode('\n', [$title, $slug, $sections_html]);
 
 
-        $call_api->contributors = implode(' ', array_keys($call_api->contributors));
-        $call_api->title_ngram = $this->tokenize($call_api->name);
+        $this->meta->contributors = implode(' ', array_keys($this->meta->contributors));
+        $this->meta->title_ngram = $this->tokenize($this->meta->name);
 
         $matching_fields = array(
             'all_content'
@@ -191,7 +209,7 @@ class WordPressPluginService {
 		 */
         $recommendations = [];
 
-        if (Str::contains(strtolower($call_api->all_content), $search_term)) {
+        if (Str::contains(strtolower($this->meta->all_content), $search_term)) {
             $log .= 'Required Search Term is in content - 0.1 point for having the search term in content <br>';
             $total_points += 0.1;
         } else {
@@ -202,7 +220,7 @@ class WordPressPluginService {
 
 // Boost phrase fields
         foreach ($boost_phrase_fields as $field) {
-            if (Str::contains(strtolower($call_api->$field), $search_term)) {
+            if (Str::contains(strtolower($this->meta->$field), $search_term)) {
                 $total_points += 2;
                 $log .= 'Term is within field: ' . $field . ' - 2 Point boost!<br>';
             } else {
@@ -213,7 +231,7 @@ class WordPressPluginService {
 
 // boost ngram fields
         foreach ($boost_ngram_fields as $field) {
-            foreach ($call_api->$field as $token) {
+            foreach ($this->meta->$field as $token) {
                 if (Str::contains($token, $search_term)) {
                     $total_points += 0.2;
                     $log .= 'Term is within ngram title : ' . $token . ' - 0.2 Point boost!<br>';
@@ -227,7 +245,7 @@ class WordPressPluginService {
         $allocate = false;
         foreach ($boost_title_fields as $field) {
             // checks if either the title OR the slug have the term
-            if (Str::contains(strtolower($call_api->$field), $search_term)) {
+            if (Str::contains(strtolower($this->meta->$field), $search_term)) {
                 $allocate = true;
             }
         }
@@ -243,7 +261,7 @@ class WordPressPluginService {
         $allocate = false;
         foreach ($boost_content_fields as $field) {
             // checks if either the title OR the slug have the term
-            if (Str::contains(strtolower($call_api->$field), $search_term)) {
+            if (Str::contains(strtolower($this->meta->$field), $search_term)) {
                 $allocate = true;
             }
         }
@@ -259,7 +277,7 @@ class WordPressPluginService {
         $allocate = false;
         foreach (['author', 'contributors'] as $field) {
             // checks if either the title OR the slug have the term
-            if (Str::contains(strtolower($call_api->$field), $search_term)) {
+            if (Str::contains(strtolower($this->meta->$field), $search_term)) {
                 $allocate = true;
             }
         }
@@ -280,20 +298,20 @@ class WordPressPluginService {
         $log .= 'For every 0.4 versions behind the current core version <br>';
 
 
-        $log .= 'For every install we have, increase the points. Active installs are: ' . $call_api->active_installs . '<br>';
-        if (empty($call_api->active_installs)) {
-            $call_api->active_installs = 1;
+        $log .= 'For every install we have, increase the points. Active installs are: ' . $this->meta->active_installs . '<br>';
+        if (empty($this->meta->active_installs)) {
+            $this->meta->active_installs = 1;
         }
         $pre_score = $total_points;
-        $score = log(2 + 0.375 * $call_api->active_installs);
+        $score = log(2 + 0.375 * $this->meta->active_installs);
 // no change if no active installs
         $total_points *= $score;
         $max_points *= $score;
         $log .= 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying active installs <br>';
 
-        if ($call_api->support_threads_resolved > 0) {
-            $resolved_percentage = $call_api->support_threads_resolved / $call_api->support_threads;
-            $log .= 'We look at support requests: ' . $call_api->support_threads_resolved . '/' . $call_api->support_threads . '  Resolved %: ' . $resolved_percentage . '<br>';
+        if ($this->meta->support_threads_resolved > 0) {
+            $resolved_percentage = $this->meta->support_threads_resolved / $this->meta->support_threads;
+            $log .= 'We look at support requests: ' . $this->meta->support_threads_resolved . '/' . $this->meta->support_threads . '  Resolved %: ' . $resolved_percentage . '<br>';
         } else {
             $resolved_percentage = 0.5;
             $log .= 'No support threads resolved. Setting base to 50% resolved.<br>';
@@ -306,12 +324,12 @@ class WordPressPluginService {
         $max_points *= $score;
         $log .= 'Score from ' . $pre_score . ' -> ' . $total_points . ' after applying support threads <br>';
 
-        if ((int)$call_api->rating === 0) {
+        if ((int)$this->meta->rating === 0) {
             $log .= 'No ratings. Setting base rating to 2.5 <br>';
-            $call_api->rating = 50;
+            $this->meta->rating = 50;
         }
-        $five_star_rating = ($call_api->rating / 20);
-        $log .= 'We look at the ratings: ' . $call_api->rating . '(' . $five_star_rating . ')<br>';
+        $five_star_rating = ($this->meta->rating / 20);
+        $log .= 'We look at the ratings: ' . $this->meta->rating . '(' . $five_star_rating . ')<br>';
 
         $score = sqrt(0.25 * $five_star_rating);
         $pre_score = $total_points;
@@ -337,16 +355,16 @@ class WordPressPluginService {
         }
 
         return [
+            'keyword' => $search_term,
             'colour' => $colour,
             'log' => $log,
             'score' => $score,
             'percentage' => $percentage,
             'max_score' => $max_score,
             'recommendations' => $recommendations,
-            'rank' => $this->get_search_term_rank($call_api, $search_term)
+            'rank' => $this->get_search_term_rank($search_term)
         ];
     }
-
 
 
 }

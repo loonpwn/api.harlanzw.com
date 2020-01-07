@@ -1,8 +1,6 @@
 version: '2'
 
 networks:
-    proxy:
-        external: true
     backend:
         driver: 'bridge'
 
@@ -22,6 +20,8 @@ services:
       - DB_HOST=hzw_db
       - VIRTUAL_HOST=local.harlanzw.com
       - HTTPS_METHOD=noredirect
+    ports:
+        - 80:80
     extra_hosts:
       - "local.harlanzw.com:127.0.0.1"
 #    This IP is not always correct, it's just what was the host-machine IP at the time
@@ -31,7 +31,11 @@ services:
          - /home/harlan/.ssh:/home/wp/.ssh
     networks:
         - backend
-        - proxy
+
+   elastisearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    networks:
+        - backend
 
    hzw_db:
     container_name: hzw_db

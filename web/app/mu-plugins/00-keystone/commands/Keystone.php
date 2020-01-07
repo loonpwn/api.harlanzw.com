@@ -18,6 +18,12 @@ class Keystone extends WP_CLI_Command {
 	public function version() {
 		return WP_CLI::line('Keystone v' . \App\config('keystone.version'));
 	}
+
+	public function test() {
+        $service = new \App\services\WordPressPluginService('bigcommerce');
+        var_dump($service->get_search_term_rank(null, 'retail'));
+
+    }
 }
 
 try {

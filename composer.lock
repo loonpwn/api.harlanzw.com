@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "496e2212c1b429a2f2944e6ba0439d07",
+    "content-hash": "30a424f859bc400f33d0032856e4d4a7",
     "packages": [
         {
             "name": "advanced-custom-fields/advanced-custom-fields-pro",
@@ -821,6 +821,48 @@
             "description": "The Illuminate View package.",
             "homepage": "https://laravel.com",
             "time": "2018-11-02T14:57:34+00:00"
+        },
+        {
+            "name": "ivopetkov/html5-dom-document-php",
+            "version": "v2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ivopetkov/html5-dom-document-php.git",
+                "reference": "ee512d14e73c417dbadccfca4ca946fa585b9e43"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ivopetkov/html5-dom-document-php/zipball/ee512d14e73c417dbadccfca4ca946fa585b9e43",
+                "reference": "ee512d14e73c417dbadccfca4ca946fa585b9e43",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "ivopetkov/docs-generator": "0.2.*",
+                "phpunit/phpunit": "6.*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "autoload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivo Petkov",
+                    "email": "ivo@ivopetkov.com",
+                    "homepage": "http://ivopetkov.com"
+                }
+            ],
+            "description": "HTML5 DOMDocument PHP library (extends DOMDocument)",
+            "time": "2019-12-05T09:24:01+00:00"
         },
         {
             "name": "johnpbloch/wordpress",
