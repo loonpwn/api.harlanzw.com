@@ -118,7 +118,7 @@
   },
   "dependencies": {
     "autotrack": "^2.4.1",
-    "bootstrap": "^4.0.0-beta",
+    "bootstrap": "^4.3.1",
     "daemonite-material": "^4.0.0-beta",
     "datatables.net-bs": "^1.10.16",
     "git-revision-webpack-plugin": "^2.5.1",
