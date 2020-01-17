@@ -2,6 +2,7 @@
 namespace App\services;
 
 use App\models\WPASearch;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Str;
 use IvoPetkov\HTML5DOMDocument;
 use IvoPetkov\HTML5DOMElement;
@@ -72,7 +73,41 @@ class WordPressPluginService {
         $this->meta->excerpt = $readme->short_description;
         // Print the entire match result
         $this->meta->description = $this->meta->sections['description'];
+
         return $this->meta;
+    }
+
+    public function indexPlugin() {
+
+        $client = ClientBuilder::create()
+            ->setHosts([
+                'https://search-wpseotest-xl47qxaeaspaf7rbav777vcnu4.ap-southeast-2.es.amazonaws.com:443'
+            ])
+            ->setSSLVerification(false)
+            ->setConnectionPool('\Elasticsearch\ConnectionPool\SimpleConnectionPool', [])
+            ->build();
+
+        $client->index([
+            'index' => 'plugins',
+            'id'    => $this->meta->slug,
+            'body'  => [
+                'author' => $this->meta->author,
+                'contributors' => collect($this->meta->contributors)->keys()->toArray(),
+                'all_content_en' => implode($this->meta->sections, '\n'),
+                'title_en' => $this->meta->name,
+                'excerpt_en' => $this->meta->excerpt,
+                'description_en' => $this->meta->description,
+                'taxonomy' => [
+                    'plugin_tags' =>
+                        collect($this->meta->tags)->map(function($tag) {
+                            return [ 'name' => $tag ];
+                        })->toArray()
+                ],
+                'title_en.ngram' => $this->meta->name,
+                'slug_text' => $this->meta->slug,
+            ],
+        ]);
+
     }
 
     protected function tokenize($string) {
