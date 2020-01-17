@@ -5,14 +5,15 @@ register_rest_route('massive-monster/v1', '/contact', [
     'methods' => 'POST',
     'callback' => function(WP_REST_Request $request) {
 
-        $toEmail = $request->get_body_params()['purpose'];
+        $params = $request->get_json_params();
+        $purpose = $params['purpose'];
 
-        $name = $request->get_body_params()['name'];
-        $email = $request->get_body_params()['email'];
-        $message = $request->get_body_params()['message'];
+        $name = $params['name'];
+        $email = $params['email'];
+        $message = $params['message'];
 
         wp_mail(
-            $toEmail,
+            $purpose . '@massivemonster.co',
             $name . ' - ' . $email,
             $message,
             [
