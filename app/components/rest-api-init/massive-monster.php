@@ -12,17 +12,23 @@ register_rest_route('massive-monster/v1', '/contact', [
         $email = $params['email'];
         $message = $params['message'];
 
-        wp_mail(
+        $sentTo = $purpose . '@massivemonster.co';
+
+        $success = wp_mail(
             $purpose . '@massivemonster.co',
             $name . ' - ' . $email,
             $message,
             [
-                'Bcc: harlan@harlanzw.com'
+                'Cc: harlan@harlanzw.com'
             ]
         );
 
         $response = new WP_REST_Response();
-        $response->set_status(201);
+        $response->set_status(200);
+        $response->set_data([
+            'success' => $success,
+            'sent_to' => $sentTo,
+        ]);
         return $response;
     }
 ]);
