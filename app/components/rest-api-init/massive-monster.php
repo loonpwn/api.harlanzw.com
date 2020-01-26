@@ -14,13 +14,14 @@ register_rest_route('massive-monster/v1', '/contact', [
 
         $sentTo = $purpose . '@massivemonster.co';
 
+        if ($purpose === 'bugs' || $purpose === 'business') {
+            $sentTo = 'contact+' . $purpose . '@massivemonster.co';
+        }
+
         $success = wp_mail(
-            $purpose . '@massivemonster.co',
+            $sentTo,
             $name . ' - ' . $email,
-            $message,
-            [
-                'Cc: harlan@harlanzw.com'
-            ]
+            $message
         );
 
         $response = new WP_REST_Response();
