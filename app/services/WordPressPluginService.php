@@ -38,6 +38,10 @@ class WordPressPluginService {
         return $seo;
     }
 
+    public function foundID() {
+        return !empty($this->seo['id']);
+    }
+
     public function get_plugin_meta() {
         WPASearch::create([
             'post_title' => 'Search: ' . $this->slug
