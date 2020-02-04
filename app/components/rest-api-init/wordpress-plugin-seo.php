@@ -54,6 +54,7 @@ register_rest_route('wp-seo/v1', '/keyword', [
                 $service = new \App\services\WordPressPluginService($plugin);
                 $service->fetch_all();
                 $service->es_index();
+                $service->meta->explain = es_decode_explain($service->meta->id, $keyword);
                 $data['competitor_plugins'][$service->slug] = $service->meta;
             }
         }

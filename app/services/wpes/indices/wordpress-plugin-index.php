@@ -440,6 +440,11 @@ class Plugin_Doc_Builder extends WPES_Abstract_Document_Builder {
         return $all_content;
     }
 
+    public function clean_string($string) {
+        $fld_bldr = new WPES_WP_Post_Field_Builder();
+        return $fld_bldr->clean_string($string);
+    }
+
     protected function _build_ml_field($content, $langs) {
         $fld = array();
         foreach (array_keys($langs) as $lang) {
