@@ -5,7 +5,7 @@ function dd($arg) {
     die;
 }
 
-require(dirname(dirname(__DIR__)) . '/services/wpes-lib/src/wpes-loader.php');
+require(dirname(dirname(__DIR__)) . '/services/wpes/wpes-loader.php');
 require(dirname(dirname(__DIR__)) . '/services/site-search/jetpack-search.php');
 
 
