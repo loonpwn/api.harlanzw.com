@@ -5,6 +5,8 @@ function dd($arg) {
     die;
 }
 
+define('WP_CORE_STABLE_BRANCH', '5.3.2');
+
 require(dirname(dirname(__DIR__)) . '/services/wpes/wpes-loader.php');
 require(dirname(dirname(__DIR__)) . '/services/site-search/jetpack-search.php');
 
