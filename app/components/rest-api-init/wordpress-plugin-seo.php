@@ -44,6 +44,7 @@ register_rest_route('wp-seo/v1', '/keyword', [
         $service->get_seo();
         $data = $service->get_search_term_score($keyword);
 
+        $data['explain'] = es_decode_explain($service->meta->id, $keyword);
         $rank = $data['rank']['rank'];
 
         $data['competitor_plugins'] = [];
@@ -60,6 +61,7 @@ register_rest_route('wp-seo/v1', '/keyword', [
         }
 
         $data['es'] = es_search($keyword);
+
 
         wp_mail('harlan@harlanzw.com', 'WPA New Keyword: ' . $plugin . ' - ' . $keyword, print_r($data, true));
 

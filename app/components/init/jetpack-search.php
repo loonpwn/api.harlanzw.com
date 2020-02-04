@@ -115,7 +115,7 @@ function es_index_plugin($meta) {
 }
 
 function es_iterate_details($details, &$results = [], $level = 0) {
-    foreach($details['details'] as $detail) {
+    foreach ($details['details'] as $detail) {
         $description = $detail['description'];
         if ($description === 'field value function: sqrt(doc[\'rating\'].value?:2.5 * factor=0.25)') {
             $results['rating'] = $details['value'];
