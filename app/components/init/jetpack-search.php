@@ -13,7 +13,7 @@ require(dirname(dirname(__DIR__)) . '/services/site-search/jetpack-search.php');
 
 function es_client() {
     return \Elasticsearch\ClientBuilder::create()->setHosts([
-        'http://search-wpseo-mo63zaipvkzlgwszqatolr3dsy.ap-southeast-2.es.amazonaws.com:80'
+        'http://search-plugin-es-6-lzvcq3yhlbmvh6fd5phptjf7am.ap-southeast-2.es.amazonaws.com:80'
     ])->build();
 }
 
