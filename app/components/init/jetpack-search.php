@@ -60,10 +60,7 @@ function es_index_plugin($meta) {
     es_client()->index([
         'index' => 'plugins',
         'type' => 'plugin',
-        'id' => wp_insert_post([
-            'post_title' => $meta->name,
-            'post_content' => $meta->description,
-        ]),
+        'id' => $meta->seo['id'],
         'body' => [
             'support_threads_resolved' => $meta->support_threads_resolved,
             'active_installs' => $meta->active_installs,

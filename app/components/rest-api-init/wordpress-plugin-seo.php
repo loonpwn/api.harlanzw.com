@@ -17,11 +17,12 @@ register_rest_route('wp-seo/v1', '/meta', [
 
         $meta = $service->get_plugin_meta();
 
-        es_index_plugin($meta);
 
         $seo = (new \App\services\Seo())->analyze('https://wordpress.org/plugins/' . $meta->slug . '/');
 
         $meta->seo = $seo;
+
+        es_index_plugin($meta);
 
         wp_mail('harlan@harlanzw.com', 'WPA New Plugin: ' . $plugin, print_r($meta, true));
 
