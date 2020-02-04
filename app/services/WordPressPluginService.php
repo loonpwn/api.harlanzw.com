@@ -22,6 +22,16 @@ class WordPressPluginService {
         $this->slug = $slug;
     }
 
+    public function fetch_all() {
+        $this->get_seo();
+        $this->get_plugin_meta();
+        return $this;
+    }
+
+    public function index_meta() {
+        es_index_plugin($this->meta);
+    }
+
     public function get_seo() {
         $seo = (new \App\services\Seo())->analyze('https://wordpress.org/plugins/' . $this->slug . '/');
         $this->seo = $seo;

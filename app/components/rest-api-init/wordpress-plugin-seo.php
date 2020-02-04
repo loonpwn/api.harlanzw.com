@@ -14,15 +14,9 @@ register_rest_route('wp-seo/v1', '/meta', [
 
 
         $service = new \App\services\WordPressPluginService($plugin);
-
-        $meta = $service->get_plugin_meta();
-
-
-        $seo = (new \App\services\Seo())->analyze('https://wordpress.org/plugins/' . $meta->slug . '/');
-
-        $meta->seo = $seo;
-
-        es_index_plugin($meta);
+        $service->fetch_all();
+        $service->index_meta();
+        $meta = $service->meta;
 
         wp_mail('harlan@harlanzw.com', 'WPA New Plugin: ' . $plugin, print_r($meta, true));
 
@@ -51,6 +45,21 @@ register_rest_route('wp-seo/v1', '/keyword', [
         $service->get_plugin_meta();
         $service->get_seo();
         $data = $service->get_search_term_score($keyword);
+
+        $rank = $service->rank['rank'];
+
+        $data['competitor_plugins'] = [];
+        if ($rank !== 'Not Found' && $rank > 0) {
+            for ($i = 0; $i < 2; $i++) {
+                $plugin = $service->rank['results'][$rank - $i];
+                // index the 2 plugins in front of the rank
+                $service = new \App\services\WordPressPluginService($plugin);
+                $service->get_plugin_meta();
+                $service->index_meta();
+
+                $data['competitor_plugins'][$service->slug] = $service->meta;
+            }
+        }
 
         $data['es'] = es_search($keyword);
 
