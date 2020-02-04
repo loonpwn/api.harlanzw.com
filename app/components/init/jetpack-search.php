@@ -114,37 +114,36 @@ function es_index_plugin($meta) {
     ]);
 }
 
+function es_iterate_details($details, &$results = [], $level = 0) {
+    foreach($details['details'] as $detail) {
+        $description = $detail['description'];
+        if ($description === 'field value function: sqrt(doc[\'rating\'].value?:2.5 * factor=0.25)') {
+            $results['rating'] = $details['value'];
+        } else if ($description === 'field value function: log2p(doc[\'active_installs\'].value?:1.0 * factor=0.375)') {
+            $results['active_installs'] = $details['value'];
+        } else if ($description === 'field value function: log2p(doc[\'support_threads_resolved\'].value?:0.5 * factor=0.25)') {
+            $results['support_threads_resolved'] = $details['value'];
+        } else if (\Illuminate\Support\Str::startsWith($description, 'weight(taxonomy.plugin_tags.name:')) {
+            $results['tags'] = ($results['tags'] ?? 0) + $details['value'];
+        } else if (\Illuminate\Support\Str::startsWith($description, 'weight(title_en:')) {
+            $results['title'] = ($results['title'] ?? 0) + $details['value'];
+        } else if (\Illuminate\Support\Str::startsWith($description, 'weight(excerpt_en:')) {
+            $results['excerpt'] = ($results['excerpt'] ?? 0) + $details['value'];
+        } else if (\Illuminate\Support\Str::startsWith($description, 'weight(description:')) {
+            $results['description'] = ($results['description'] ?? 0) + $details['value'];
+        } else if (\Illuminate\Support\Str::startsWith($description, 'weight(all_content_en:')) {
+            $results['all_content'] = ($results['all_content'] ?? 0) + $details['value'];
+        }
+        if (!empty($detail['details'])) {
+            es_iterate_details($detail, $results, ++$level);
+        }
+    }
+    return $results;
+}
+
 function es_decode_explain($id, $query) {
     $details = es_explain($id, $query);
-
-    function iterateDetails($details, &$results = [], $level = 0) {
-        foreach($details['details'] as $detail) {
-            $description = $detail['description'];
-            if ($description === 'field value function: sqrt(doc[\'rating\'].value?:2.5 * factor=0.25)') {
-                $results['rating'] = $details['value'];
-            } else if ($description === 'field value function: log2p(doc[\'active_installs\'].value?:1.0 * factor=0.375)') {
-                $results['active_installs'] = $details['value'];
-            } else if ($description === 'field value function: log2p(doc[\'support_threads_resolved\'].value?:0.5 * factor=0.25)') {
-                $results['support_threads_resolved'] = $details['value'];
-            } else if (\Illuminate\Support\Str::startsWith($description, 'weight(taxonomy.plugin_tags.name:')) {
-                $results['tags'] = ($results['tags'] ?? 0) + $details['value'];
-            } else if (\Illuminate\Support\Str::startsWith($description, 'weight(title_en:')) {
-                $results['title'] = ($results['title'] ?? 0) + $details['value'];
-            } else if (\Illuminate\Support\Str::startsWith($description, 'weight(excerpt_en:')) {
-                $results['excerpt'] = ($results['excerpt'] ?? 0) + $details['value'];
-            } else if (\Illuminate\Support\Str::startsWith($description, 'weight(description:')) {
-                $results['description'] = ($results['description'] ?? 0) + $details['value'];
-            } else if (\Illuminate\Support\Str::startsWith($description, 'weight(all_content_en:')) {
-                $results['all_content'] = ($results['all_content'] ?? 0) + $details['value'];
-            }
-            if (!empty($detail['details'])) {
-                iterateDetails($detail, $results, ++$level);
-            }
-        }
-        return $results;
-    }
-
-    return iterateDetails($details['explanation']);
+    return es_iterate_details($details['explanation']);
 }
 
 es_create_index_maybe();
