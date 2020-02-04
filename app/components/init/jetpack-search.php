@@ -51,7 +51,7 @@ function es_search($query) {
     ]);
 }
 
-function es_index_plugin($meta) {
+function es_index_plugin(\App\services\WordPressPluginService $meta) {
 
     $postBuilder = new Plugin_Doc_Builder();
 

@@ -29,7 +29,7 @@ class WordPressPluginService {
     }
 
     public function index_meta() {
-        es_index_plugin($this->meta);
+        es_index_plugin($this);
     }
 
     public function get_seo() {

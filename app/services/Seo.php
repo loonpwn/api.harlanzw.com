@@ -70,7 +70,7 @@ class Seo
             $this->client = new Client([
                 'timeout'  => 10.0,
                 'headers'  => [
-                    'User-Agent' => 'Made I.T. Seo Analyzer',
+                    'User-Agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux i686 on x86_64; rv:41.0) Gecko/20100101 Firefox/41.0',
                 ],
                 'verify' => true,
             ]);

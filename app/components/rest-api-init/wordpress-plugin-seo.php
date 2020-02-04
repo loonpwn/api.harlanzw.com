@@ -11,8 +11,6 @@ register_rest_route('wp-seo/v1', '/meta', [
             $plugin = str_replace(['https://wordpress.org/plugins/', '/'], '', $plugin);
         }
 
-
-
         $service = new \App\services\WordPressPluginService($plugin);
         $service->fetch_all();
         $service->index_meta();
