@@ -432,11 +432,10 @@ class Plugin_Doc_Builder extends WPES_Abstract_Document_Builder {
         $fld_bldr = new WPES_WP_Post_Field_Builder();
 
         $all_content = '';
-        $all_content .= $fld_bldr->clean_string($args['title'], 5000) . "\n\n";
-        //2500 words in Mongolian (ave 12 chars per word), English is 3600 words
-        // this field also gets used for search as you type matching
-        $all_content .= $fld_bldr->clean_string($args['content'], 30000) . "\n\n";
-        $all_content .= $fld_bldr->clean_string($args['excerpt'], 5000) . "\n\n";
+
+        foreach ($args as $arg) {
+            $all_content .= $fld_bldr->clean_string($arg, 5000) . "\n\n";
+        }
 
         return $all_content;
     }

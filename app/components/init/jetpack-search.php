@@ -18,7 +18,7 @@ function es_client() {
 }
 
 function es_delete_index() {
-    es_client()->indices()->delete(['index' => 'plugins']);
+    return es_client()->indices()->delete(['index' => 'plugins']);
 }
 
 function es_create_index_maybe() {
@@ -66,13 +66,12 @@ function es_index_plugin($meta) {
             'active_installs' => $meta->active_installs,
             'tested' => $post_fld_bldr->clean_float($meta->tested),
             'rating' => $meta->rating,
-            'all_content_en' => $postBuilder->concat_all_content([
+            'all_content_en' => $postBuilder->concat_all_content(array_merge($meta->sections, [
                 'title' => $meta->name,
-                'content' => $meta->description,
                 'excerpt' => $meta->excerpt,
-            ]),
+            ])),
             'title_en' => $meta->name,
-            'excerpt_en' => $meta->name,
+            'excerpt_en' => $meta->excerpt,
             'description_en' => $meta->description,
             'taxonomy' => [
                 'plugin_tags' => [
