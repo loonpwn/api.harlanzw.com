@@ -32,11 +32,6 @@ services:
     networks:
         - backend
 
-   elastisearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
-    networks:
-        - backend
-
    hzw_db:
     container_name: hzw_db
     image: mariadb

@@ -11,9 +11,13 @@ register_rest_route('wp-seo/v1', '/meta', [
             $plugin = str_replace(['https://wordpress.org/plugins/', '/'], '', $plugin);
         }
 
+
+
         $service = new \App\services\WordPressPluginService($plugin);
 
         $meta = $service->get_plugin_meta();
+
+        es_index_plugin($meta);
 
         $seo = (new \App\services\Seo())->analyze('https://wordpress.org/plugins/' . $meta->slug . '/');
 
@@ -47,6 +51,7 @@ register_rest_route('wp-seo/v1', '/keyword', [
         $service->get_seo();
         $data = $service->get_search_term_score($keyword);
 
+        $data['es'] = es_search($keyword);
 
         wp_mail('harlan@harlanzw.com', 'WPA New Keyword: ' . $plugin . ' - ' . $keyword, print_r($data, true));
 
