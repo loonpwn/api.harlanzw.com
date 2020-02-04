@@ -110,6 +110,8 @@ class WordPressPluginService {
     public function get_search_term_rank($search_term) {
         $rank = null;
 
+        $results = [];
+
         for ($page = 1; $page <= 5; $page++) {
             $html = file_get_contents('https://wordpress.org/plugins/search/' . Str::slug($search_term) . '/page/' . $page);
 
@@ -122,6 +124,7 @@ class WordPressPluginService {
             $i = 0;
             foreach ($elements as $childNode) {
                 $i++;
+                $results[$i] = str_replace(['https://en-au.wordpress.org/plugins/', '/'], '', $childNode->querySelector('a')->getAttribute('href'));
                 if ($childNode->classList->contains($this->seo['id'])) {
                     $rank = $i;
                     break;
@@ -142,6 +145,7 @@ class WordPressPluginService {
         }
 
         return [
+            'results' => $results,
             'total' => $total,
             'rank' => $rank ?? 'Not Found'
         ];
