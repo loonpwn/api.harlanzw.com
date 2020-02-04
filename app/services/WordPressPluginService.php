@@ -28,7 +28,7 @@ class WordPressPluginService {
         return $this;
     }
 
-    public function index_meta() {
+    public function es_index() {
         es_index_plugin($this);
     }
 

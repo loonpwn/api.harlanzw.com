@@ -62,28 +62,28 @@ function es_index_plugin(\App\services\WordPressPluginService $meta) {
         'type' => 'plugin',
         'id' => $meta->seo['id'],
         'body' => [
-            'support_threads_resolved' => $meta->support_threads_resolved,
-            'active_installs' => $meta->active_installs,
-            'tested' => $post_fld_bldr->clean_float($meta->tested),
-            'rating' => $meta->rating,
+            'support_threads_resolved' => $meta->meta->support_threads_resolved,
+            'active_installs' => $meta->meta->active_installs,
+            'tested' => $post_fld_bldr->clean_float($meta->meta->tested),
+            'rating' => $meta->meta->rating,
             'all_content_en' => $postBuilder->concat_all_content([
-                'title' => $meta->name,
-                'content' => $meta->description,
-                'excerpt' => $meta->excerpt,
+                'title' => $meta->meta->name,
+                'content' => $meta->meta->description,
+                'excerpt' => $meta->meta->excerpt,
             ]),
-            'title_en' => $meta->name,
-            'excerpt_en' => $meta->name,
-            'description_en' => $meta->description,
+            'title_en' => $meta->meta->name,
+            'excerpt_en' => $meta->meta->excerpt,
+            'description_en' => $meta->meta->description,
             'taxonomy' => [
                 'plugin_tags' => [
-                    collect($meta->tags)->values()->map(function($value) {
+                    collect($meta->meta->tags)->values()->map(function($value) {
                         return [ 'name' => $value ];
                     })->toArray()
                 ]
             ],
-            'slug_text' => $meta->slug,
-            'author' => $meta->author,
-            'contributors' => collect($meta->contributors)->keys()->implode(',')
+            'slug_text' => $meta->meta->slug,
+            'author' => $meta->meta->author,
+            'contributors' => collect($meta->meta->contributors)->keys()->implode(',')
         ]
     ]);
 }
