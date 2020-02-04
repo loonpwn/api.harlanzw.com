@@ -112,8 +112,13 @@ class WordPressPluginService {
 
         $results = [];
 
+        $ch = curl_init();
+
         for ($page = 1; $page <= 5; $page++) {
-            $html = file_get_contents('https://wordpress.org/plugins/search/' . Str::slug($search_term) . '/page/' . $page);
+            curl_setopt($ch, CURLOPT_URL, 'https://wordpress.org/plugins/search/' . Str::slug($search_term) . '/page/' . $page);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/79.0.3945.79 Chrome/79.0.3945.79 Safari/537.36');
+            $html = curl_exec($ch);
 
             $dom = new HTML5DOMDocument();
             $dom->loadHTML($html, HTML5DOMDocument::ALLOW_DUPLICATE_IDS);
@@ -124,7 +129,7 @@ class WordPressPluginService {
             $i = 0;
             foreach ($elements as $childNode) {
                 $i++;
-                $results[$i] = str_replace(['https://en-au.wordpress.org/plugins/', '/'], '', $childNode->querySelector('a')->getAttribute('href'));
+                $results[$i] = str_replace('/', '', str_replace(['https://en-au.wordpress.org/plugins/', 'https://wordpress.org/plugins/'], '', $childNode->querySelector('a')->getAttribute('href')));
                 if ($childNode->classList->contains($this->seo['id'])) {
                     $rank = $i;
                     break;
@@ -142,7 +147,10 @@ class WordPressPluginService {
             if (is_int($rank)) {
                 break;
             }
+            // 500 ms
+            usleep(500000);
         }
+        curl_close($ch);
 
         return [
             'results' => $results,
