@@ -13,7 +13,7 @@ register_rest_route('wp-seo/v1', '/meta', [
 
         $service = new \App\services\WordPressPluginService($plugin);
         $service->fetch_all();
-        $service->index_meta();
+        $service->es_index();
         $meta = $service->meta;
 
         wp_mail('harlan@harlanzw.com', 'WPA New Plugin: ' . $plugin, print_r($meta, true));
@@ -52,11 +52,9 @@ register_rest_route('wp-seo/v1', '/keyword', [
                 $plugin = $service->rank['results'][$rank - $i];
                 // index the 2 plugins in front of the rank
                 $service = new \App\services\WordPressPluginService($plugin);
-                $service->get_plugin_meta();
-                if ($service->foundID()) {
-                    $service->index_meta();
-                    $data['competitor_plugins'][$service->slug] = $service->meta;
-                }
+                $service->fetch_all();
+                $service->es_index();
+                $data['competitor_plugins'][$service->slug] = $service->meta;
             }
         }
 

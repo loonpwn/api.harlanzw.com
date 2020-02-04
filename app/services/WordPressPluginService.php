@@ -23,23 +23,20 @@ class WordPressPluginService {
     }
 
     public function fetch_all() {
-        $this->get_seo();
         $this->get_plugin_meta();
+        $this->get_seo();
         return $this;
     }
 
     public function es_index() {
-        es_index_plugin($this);
+        es_index_plugin($this->meta);
     }
 
     public function get_seo() {
         $seo = (new \App\services\Seo())->analyze('https://wordpress.org/plugins/' . $this->slug . '/');
         $this->seo = $seo;
+        $this->meta->id = str_replace('post-', '', $seo['id']);
         return $seo;
-    }
-
-    public function foundID() {
-        return !empty($this->seo['id']);
     }
 
     public function get_plugin_meta() {
