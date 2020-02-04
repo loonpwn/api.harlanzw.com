@@ -44,7 +44,7 @@ class WordPressPluginService {
             'post_title' => 'Search: ' . $this->slug
         ]);
 
-        require ABSPATH . '/wp-admin/includes/plugin-install.php';
+        require_once ABSPATH . '/wp-admin/includes/plugin-install.php';
 
         /** Prepare our query */
         $this->meta = plugins_api('plugin_information', array('slug' => $this->slug, 'fields' => [

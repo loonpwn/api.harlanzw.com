@@ -88,5 +88,4 @@ function es_index_plugin($meta) {
     ]);
 }
 
-
 es_create_index_maybe();

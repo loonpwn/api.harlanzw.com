@@ -44,12 +44,12 @@ register_rest_route('wp-seo/v1', '/keyword', [
         $service->get_seo();
         $data = $service->get_search_term_score($keyword);
 
-        $rank = $service->rank['rank'];
+        $rank = $data['rank']['rank'];
 
         $data['competitor_plugins'] = [];
-        if ($rank !== 'Not Found' && $rank > 0) {
-            for ($i = 0; $i < 1; $i++) {
-                $plugin = $service->rank['results'][$rank - $i];
+        if ($rank !== 'Not Found' && $rank >= 3) {
+            for ($i = 1; $i < 3; $i++) {
+                $plugin = $data['rank']['results'][$rank - $i];
                 // index the 2 plugins in front of the rank
                 $service = new \App\services\WordPressPluginService($plugin);
                 $service->fetch_all();
