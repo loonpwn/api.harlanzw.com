@@ -19,7 +19,7 @@ register_rest_route('massive-monster/v1', '/contact', [
         }
 
         $success = wp_mail(
-            $sentTo,
+            'contact@massivemonster.co',
             $name . ' - ' . $email,
             $message
         );
