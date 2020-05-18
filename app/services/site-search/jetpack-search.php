@@ -655,7 +655,7 @@ class Jetpack_Search {
 			'orderby'        => null,    // Defaults to 'relevance' if query is set, otherwise 'date'. Pass an array for multiple orders.
 			'order'          => 'DESC',
 
-			'posts_per_page' => 10,
+			'posts_per_page' => 100,
 			'offset'         => null,
 			'paged'          => null,
 
