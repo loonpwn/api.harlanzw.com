@@ -84,38 +84,6 @@ function es_index_plugin($meta) {
 
     $post_fld_bldr = new WPES_WP_Post_Field_Builder();
 
-    if ($meta->id === 26669) {
-        var_dump([
-            'index' => 'plugins',
-            'type' => 'plugin',
-            'id' => $meta->id,
-            'body' => [
-                'support_threads_resolved' => $meta->support_threads_resolved,
-                'active_installs' => $meta->active_installs,
-                'tested' => $post_fld_bldr->clean_float($meta->tested),
-                'rating' => $meta->rating,
-                'all_content_en' => $postBuilder->concat_all_content(array_merge($meta->sections, [
-                    'title' => $meta->name,
-                    'excerpt' => $meta->excerpt,
-                ])),
-                'title_en' => $postBuilder->clean_string($meta->name),
-                'excerpt_en' => $postBuilder->clean_string($meta->excerpt),
-                'description_en' => $postBuilder->clean_string($meta->description),
-                'taxonomy' => [
-                    'plugin_tags' => [
-                        collect($meta->tags)->values()->map(function($value) {
-                            return [ 'name' => $value ];
-                        })->toArray()
-                    ]
-                ],
-                'slug_text' => $meta->slug,
-                'author' => $meta->author,
-                'contributors' => collect($meta->contributors)->keys()->implode(',')
-            ]
-        ]);
-        return;
-    }
-
     try {
         es_client()->index([
             'index' => 'plugins',
@@ -145,9 +113,11 @@ function es_index_plugin($meta) {
                 'contributors' => collect($meta->contributors)->keys()->implode(',')
             ]
         ]);
+        return true;
     } catch (Exception $e) {
-        error_log($e);
+        error_log($e->getTraceAsString());
     }
+    return false;
 }
 
 function es_iterate_details($details, &$results = [], $level = 0) {
