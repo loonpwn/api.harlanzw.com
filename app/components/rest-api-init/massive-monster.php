@@ -17,6 +17,9 @@ register_rest_route('massive-monster/v1', '/contact', [
         if ($purpose === 'bugs' || $purpose === 'business') {
             $sentTo = 'contact+' . $purpose . '@massivemonster.co';
         }
+        $headers[]   = 'Reply-To: ' . $name . ' <' . $email . '>';
+        $headers[]   = 'Bcc: harlan@harlanzw.com';
+        $headers[]   = 'From: ' . $name . ' <' . $email . '>';
 
         $success = wp_mail(
             'contact@massivemonster.co',
