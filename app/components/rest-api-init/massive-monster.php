@@ -19,7 +19,6 @@ register_rest_route('massive-monster/v1', '/contact', [
         }
         $headers[]   = 'Reply-To: ' . $name . ' <' . $email . '>';
         $headers[]   = 'Bcc: harlan@harlanzw.com';
-        $headers[]   = 'From: ' . $name . ' <' . $email . '>';
 
         $success = wp_mail(
             'contact@massivemonster.co',
