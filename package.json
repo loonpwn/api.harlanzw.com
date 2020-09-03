@@ -125,7 +125,7 @@
     "headroom.js": "^0.9.4",
     "highlight.js": "^9.12.0",
     "jquery": "1.12.4 - 3",
-    "lazysizes": "^4.0.1",
+    "lazysizes": "^5.2.1",
     "popper.js": "^1.11.0",
     "select2": "^4.0.6-rc.1"
   }
